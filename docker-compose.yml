@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: esports-postgres
+    environment:
+      POSTGRES_DB: esports-db
+      POSTGRES_USER: admin69
+      POSTGRES_PASSWORD: admin69
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./Db/init_table.sql:/docker-entrypoint-initdb.d/init_table.sql
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin69 -d esports-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
