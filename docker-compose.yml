@@ -9,7 +9,8 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - ./Db/init_table.sql:/docker-entrypoint-initdb.d/init_table.sql
+      - ./Db/init_table.sql:/docker-entrypoint-initdb.d/01_init_table.sql
+      - ./Db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin69 -d esports-db"]

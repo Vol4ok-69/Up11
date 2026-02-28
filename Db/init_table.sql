@@ -12,10 +12,7 @@ CREATE TABLE "Users" (
     "RoleId" INT NOT NULL,
     "IsBlocked" BOOLEAN NOT NULL DEFAULT FALSE,
     "CreatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "FK_Users_Roles"
-        FOREIGN KEY ("RoleId")
-        REFERENCES "Roles"("Id")
-        ON DELETE RESTRICT
+    FOREIGN KEY ("RoleId") REFERENCES "Roles"("Id")
 );
 
 CREATE TABLE "Disciplines" (
@@ -30,14 +27,8 @@ CREATE TABLE "Teams" (
     "DisciplineId" INT NOT NULL,
     "CaptainId" INT NOT NULL,
     "CreatedAt" DATE NOT NULL,
-    CONSTRAINT "FK_Teams_Disciplines"
-        FOREIGN KEY ("DisciplineId")
-        REFERENCES "Disciplines"("Id")
-        ON DELETE RESTRICT,
-    CONSTRAINT "FK_Teams_Captain"
-        FOREIGN KEY ("CaptainId")
-        REFERENCES "Users"("Id")
-        ON DELETE RESTRICT
+    FOREIGN KEY ("DisciplineId") REFERENCES "Disciplines"("Id"),
+    FOREIGN KEY ("CaptainId") REFERENCES "Users"("Id")
 );
 
 CREATE TABLE "TeamMembers" (
@@ -45,16 +36,14 @@ CREATE TABLE "TeamMembers" (
     "TeamId" INT NOT NULL,
     "UserId" INT NOT NULL,
     "JoinedAt" DATE NOT NULL,
-    CONSTRAINT "FK_TeamMembers_Teams"
-        FOREIGN KEY ("TeamId")
-        REFERENCES "Teams"("Id")
-        ON DELETE CASCADE,
-    CONSTRAINT "FK_TeamMembers_Users"
-        FOREIGN KEY ("UserId")
-        REFERENCES "Users"("Id")
-        ON DELETE CASCADE,
-    CONSTRAINT "UQ_TeamMembers"
-        UNIQUE ("TeamId", "UserId")
+    UNIQUE ("TeamId","UserId"),
+    FOREIGN KEY ("TeamId") REFERENCES "Teams"("Id") ON DELETE CASCADE,
+    FOREIGN KEY ("UserId") REFERENCES "Users"("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE "TournamentStatuses" (
+    "Id" SERIAL PRIMARY KEY,
+    "Title" VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE "Tournaments" (
@@ -64,50 +53,42 @@ CREATE TABLE "Tournaments" (
     "StartDate" DATE NOT NULL,
     "EndDate" DATE NOT NULL,
     "PrizePool" NUMERIC(12,2) NOT NULL CHECK ("PrizePool" >= 0),
-    "Status" VARCHAR(30) NOT NULL,
+    "StatusId" INT NOT NULL,
     "OrganizerId" INT NOT NULL,
-    CONSTRAINT "FK_Tournaments_Discipline"
-        FOREIGN KEY ("DisciplineId")
-        REFERENCES "Disciplines"("Id")
-        ON DELETE RESTRICT,
-    CONSTRAINT "FK_Tournaments_Organizer"
-        FOREIGN KEY ("OrganizerId")
-        REFERENCES "Users"("Id")
-        ON DELETE RESTRICT
+    FOREIGN KEY ("DisciplineId") REFERENCES "Disciplines"("Id"),
+    FOREIGN KEY ("StatusId") REFERENCES "TournamentStatuses"("Id"),
+    FOREIGN KEY ("OrganizerId") REFERENCES "Users"("Id")
+);
+
+CREATE TABLE "ApplicationStatuses" (
+    "Id" SERIAL PRIMARY KEY,
+    "Title" VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE "TournamentApplications" (
     "Id" SERIAL PRIMARY KEY,
     "TournamentId" INT NOT NULL,
     "TeamId" INT NOT NULL,
-    "Status" VARCHAR(30) NOT NULL,
+    "StatusId" INT NOT NULL,
     "AppliedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "FK_Applications_Tournament"
-        FOREIGN KEY ("TournamentId")
-        REFERENCES "Tournaments"("Id")
-        ON DELETE CASCADE,
-    CONSTRAINT "FK_Applications_Team"
-        FOREIGN KEY ("TeamId")
-        REFERENCES "Teams"("Id")
-        ON DELETE CASCADE,
-    CONSTRAINT "UQ_TournamentApplication"
-        UNIQUE ("TournamentId", "TeamId")
+    UNIQUE ("TournamentId","TeamId"),
+    FOREIGN KEY ("TournamentId") REFERENCES "Tournaments"("Id") ON DELETE CASCADE,
+    FOREIGN KEY ("TeamId") REFERENCES "Teams"("Id") ON DELETE CASCADE,
+    FOREIGN KEY ("StatusId") REFERENCES "ApplicationStatuses"("Id")
 );
 
 CREATE TABLE "TournamentParticipants" (
     "Id" SERIAL PRIMARY KEY,
     "TournamentId" INT NOT NULL,
     "TeamId" INT NOT NULL,
-    CONSTRAINT "FK_Participants_Tournament"
-        FOREIGN KEY ("TournamentId")
-        REFERENCES "Tournaments"("Id")
-        ON DELETE CASCADE,
-    CONSTRAINT "FK_Participants_Team"
-        FOREIGN KEY ("TeamId")
-        REFERENCES "Teams"("Id")
-        ON DELETE CASCADE,
-    CONSTRAINT "UQ_TournamentParticipant"
-        UNIQUE ("TournamentId", "TeamId")
+    UNIQUE ("TournamentId","TeamId"),
+    FOREIGN KEY ("TournamentId") REFERENCES "Tournaments"("Id") ON DELETE CASCADE,
+    FOREIGN KEY ("TeamId") REFERENCES "Teams"("Id") ON DELETE CASCADE
+);
+
+CREATE TABLE "MatchStages" (
+    "Id" SERIAL PRIMARY KEY,
+    "Title" VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE "Matches" (
@@ -116,22 +97,13 @@ CREATE TABLE "Matches" (
     "TeamAId" INT NOT NULL,
     "TeamBId" INT NOT NULL,
     "MatchDate" TIMESTAMP NOT NULL,
-    "Stage" VARCHAR(50) NOT NULL,
+    "StageId" INT NOT NULL,
     "IsFinished" BOOLEAN NOT NULL DEFAULT FALSE,
-    CONSTRAINT "FK_Matches_Tournament"
-        FOREIGN KEY ("TournamentId")
-        REFERENCES "Tournaments"("Id")
-        ON DELETE CASCADE,
-    CONSTRAINT "FK_Matches_TeamA"
-        FOREIGN KEY ("TeamAId")
-        REFERENCES "Teams"("Id")
-        ON DELETE RESTRICT,
-    CONSTRAINT "FK_Matches_TeamB"
-        FOREIGN KEY ("TeamBId")
-        REFERENCES "Teams"("Id")
-        ON DELETE RESTRICT,
-    CONSTRAINT "CHK_DifferentTeams"
-        CHECK ("TeamAId" <> "TeamBId")
+    CHECK ("TeamAId" <> "TeamBId"),
+    FOREIGN KEY ("TournamentId") REFERENCES "Tournaments"("Id") ON DELETE CASCADE,
+    FOREIGN KEY ("TeamAId") REFERENCES "Teams"("Id"),
+    FOREIGN KEY ("TeamBId") REFERENCES "Teams"("Id"),
+    FOREIGN KEY ("StageId") REFERENCES "MatchStages"("Id")
 );
 
 CREATE TABLE "MatchResults" (
@@ -139,13 +111,15 @@ CREATE TABLE "MatchResults" (
     "MatchId" INT NOT NULL UNIQUE,
     "ScoreTeamA" INT NOT NULL CHECK ("ScoreTeamA" >= 0),
     "ScoreTeamB" INT NOT NULL CHECK ("ScoreTeamB" >= 0),
-    "WinnerTeamId" INT NOT NULL,
-    CONSTRAINT "FK_Results_Match"
-        FOREIGN KEY ("MatchId")
-        REFERENCES "Matches"("Id")
-        ON DELETE CASCADE,
-    CONSTRAINT "FK_Results_Winner"
-        FOREIGN KEY ("WinnerTeamId")
-        REFERENCES "Teams"("Id")
-        ON DELETE RESTRICT
+    "WinnerTeamId" INT,
+    FOREIGN KEY ("MatchId") REFERENCES "Matches"("Id") ON DELETE CASCADE,
+    FOREIGN KEY ("WinnerTeamId") REFERENCES "Teams"("Id")
+);
+
+ALTER TABLE "MatchResults"
+ADD CONSTRAINT "CHK_Winner_Logic"
+CHECK (
+    ("ScoreTeamA" = "ScoreTeamB" AND "WinnerTeamId" IS NULL)
+    OR
+    ("ScoreTeamA" <> "ScoreTeamB" AND "WinnerTeamId" IS NOT NULL)
 );
