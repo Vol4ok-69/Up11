@@ -51,6 +51,9 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDisciplineService, DisciplineService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
