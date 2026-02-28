@@ -19,6 +19,8 @@ public partial class User
 
     public bool IsBlocked { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public virtual Role Role { get; set; } = null!;

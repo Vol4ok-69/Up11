@@ -30,7 +30,6 @@ public class AuthService(DataBaseContext context, IJwtTokenService jwtService) :
             PasswordHash = PasswordHelper.Hash(dto.Password),
             Nickname = dto.Nickname,
             RoleId = guestRole.Id,
-            CreatedAt = DateTime.UtcNow,
             IsBlocked = false
         };
 

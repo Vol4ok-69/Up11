@@ -10,6 +10,8 @@ public interface IUserService
     Task UpdateAsync(int id, UserUpdateDto dto);
     Task DeleteAsync(int id);
 
-    Task ChangePasswordAsync(int id, ChangePasswordDto dto);
-    Task ChangeEmailAsync(int id, ChangeEmailDto dto);
+    Task ChangePasswordAsync(int id, ChangePasswordDto dto, int currentUserId, string role);
+    Task ChangeEmailAsync(int id, ChangeEmailDto dto, int currentUserId, string role);
+    Task BlockAsync(int id);
+    Task UnblockAsync(int id);
 }

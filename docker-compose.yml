@@ -18,5 +18,22 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: esports-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=esports-db;Username=admin69;Password=admin69
+      Jwt__Key: SUPER_SECRET_KEY_123456789_SUPER_SECRET_KEY_696969696969696969
+      Jwt__Issuer: Up11
+      Jwt__Audience: Up11Users
+      Jwt__ExpireMinutes: 60
+    ports:
+      - "5000:8080"
+
 volumes:
   pgdata:

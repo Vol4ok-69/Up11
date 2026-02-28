@@ -6,11 +6,23 @@ using System.Text;
 using Up11.Api.Interfaces;
 using Up11.Api.Services;
 using Up11.Api.Middlewares;
+using Up11.Api.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataBaseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminOnly", policy => policy.Requirements.Add(
+            new MinimumRoleRequirement((int)RoleLevel.Administrator)))
+    .AddPolicy("OrganizerOrHigher", policy => policy.Requirements.Add(
+            new MinimumRoleRequirement((int)RoleLevel.Organizer)))
+    .AddPolicy("CaptainOrHigher", policy => policy.Requirements.Add(
+            new MinimumRoleRequirement((int)RoleLevel.Captain)));
+
+builder.Services.AddSingleton<IAuthorizationHandler, MinimumRoleHandler>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
@@ -34,7 +46,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
-builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Up11.Api.DTOs.User;
 using Up11.Api.Interfaces;
 
@@ -11,7 +12,7 @@ public class UsersController(IUserService service) : ControllerBase
 {
     private readonly IUserService _service = service;
 
-    [Authorize(Roles = "Администратор")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet]
     public async Task<IActionResult> GetAll()
         => Ok(await _service.GetAllAsync());
@@ -21,7 +22,7 @@ public class UsersController(IUserService service) : ControllerBase
     public async Task<IActionResult> Get(int id)
         => Ok(await _service.GetByIdAsync(id));
 
-    [Authorize(Roles = "Администратор")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UserUpdateDto dto)
     {
@@ -29,7 +30,7 @@ public class UsersController(IUserService service) : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "Администратор")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -41,7 +42,10 @@ public class UsersController(IUserService service) : ControllerBase
     [HttpPatch("{id}/change/password")]
     public async Task<IActionResult> ChangePassword(int id, ChangePasswordDto dto)
     {
-        await _service.ChangePasswordAsync(id, dto);
+        var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var role = User.FindFirst(ClaimTypes.Role)!.Value;
+
+        await _service.ChangePasswordAsync(id, dto, currentUserId, role);
         return NoContent();
     }
 
@@ -49,7 +53,26 @@ public class UsersController(IUserService service) : ControllerBase
     [HttpPatch("{id}/change/email")]
     public async Task<IActionResult> ChangeEmail(int id, ChangeEmailDto dto)
     {
-        await _service.ChangeEmailAsync(id, dto);
+        var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var role = User.FindFirst(ClaimTypes.Role)!.Value;
+
+        await _service.ChangeEmailAsync(id, dto, currentUserId, role);
+        return NoContent();
+    }
+
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPatch("{id}/block")]
+    public async Task<IActionResult> Block(int id)
+    {
+        await _service.BlockAsync(id);
+        return NoContent();
+    }
+
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPatch("{id}/unblock")]
+    public async Task<IActionResult> Unblock(int id)
+    {
+        await _service.UnblockAsync(id);
         return NoContent();
     }
 }

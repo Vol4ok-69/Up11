@@ -244,6 +244,7 @@ public partial class DataBaseContext : DbContext
                 .HasColumnType("timestamp without time zone");
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.IsBlocked).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.Login).HasMaxLength(50);
             entity.Property(e => e.Nickname).HasMaxLength(50);
             entity.Property(e => e.PasswordHash).HasMaxLength(255);
@@ -253,6 +254,11 @@ public partial class DataBaseContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Users_RoleId_fkey");
         });
+
+        modelBuilder.Entity<User>()
+            .HasQueryFilter(u => !u.IsDeleted);
+
+        base.OnModelCreating(modelBuilder);
 
         OnModelCreatingPartial(modelBuilder);
     }
