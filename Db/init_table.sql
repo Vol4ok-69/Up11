@@ -115,7 +115,7 @@ CREATE TABLE "MatchResults" (
     FOREIGN KEY ("MatchId") REFERENCES "Matches"("Id") ON DELETE CASCADE,
     FOREIGN KEY ("WinnerTeamId") REFERENCES "Teams"("Id")
 );
-
+	
 ALTER TABLE "MatchResults"
 ADD CONSTRAINT "CHK_Winner_Logic"
 CHECK (
