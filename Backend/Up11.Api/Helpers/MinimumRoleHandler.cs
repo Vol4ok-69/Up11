@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Up11.Api.Helpers;
+namespace Up11.Api.Helpers;
 
 public class MinimumRoleHandler : AuthorizationHandler<MinimumRoleRequirement>
 {

@@ -56,6 +56,9 @@ builder.Services.AddScoped<ITeamMemberService, TeamMemberService>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<IBracketService, BracketService>();
 builder.Services.AddScoped<IMatchService, MatchService>();
+builder.Services.AddScoped<ITournamentStatusService, TournamentStatusService>();
+builder.Services.AddScoped<ITournamentSystemService, TournamentSystemService>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
