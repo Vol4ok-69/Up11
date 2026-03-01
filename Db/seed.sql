@@ -1,114 +1,158 @@
-INSERT INTO "Roles" ("Title") VALUES
-('Администратор'),
-('Организатор турнира'),
-('Игрок'),
-('Гость'),
-('Капитан');
+-- =========================
+-- ROLES
+-- =========================
+INSERT INTO "Roles" ("Id","Title") VALUES
+(1,'Администратор'),
+(2,'Организатор турнира'),
+(3,'Игрок'),
+(4,'Гость'),
+(5,'Капитан');
 
-INSERT INTO "Users" ("Login","PasswordHash","Email","Nickname","RoleId")
+-- =========================
+-- USERS (пароль любой, потом можно перерегистрироваться)
+-- =========================
+INSERT INTO "Users"
+("Id","Login","PasswordHash","Email","Nickname","RoleId","IsBlocked","IsDeleted")
 VALUES
-('admin','h1','admin@mail.ru','Admin',1),
-('org1','h2','org1@mail.ru','OrganizerPro',2),
-('player1','h3','p1@mail.ru','Shadow',3),
-('player2','h4','p2@mail.ru','Blaze',5),
-('player3','h5','p3@mail.ru','Sniper',3),
-('player4','h6','p4@mail.ru','Phoenix',3);
+(1,'admin','hash','admin@mail.ru','Admin',1,false,false),
+(2,'organizer','hash','org@mail.ru','Organizer',2,false,false),
+(3,'player1','hash','p1@mail.ru','PlayerOne',3,false,false),
+(4,'player2','hash','p2@mail.ru','PlayerTwo',3,false,false),
+(5,'player3','hash','p3@mail.ru','PlayerThree',3,false,false),
+(6,'player4','hash','p4@mail.ru','PlayerFour',3,false,false),
+(7,'player5','hash','p5@mail.ru','PlayerFive',3,false,false),
+(8,'player6','hash','p6@mail.ru','PlayerSix',3,false,false);
 
-INSERT INTO "Disciplines" ("Title","Description") VALUES
-('Dota 2','MOBA'),
-('Counter-Strike 2','Shooter'),
-('PUBG','Battle Royale'),
-('Clash Royale','Mobile strategy'),
-('Valorant','Shooter');
+-- =========================
+-- DISCIPLINES
+-- =========================
+INSERT INTO "Disciplines" ("Id","Title","Description") VALUES
+(1,'Dota 2','MOBA'),
+(2,'Counter-Strike 2','FPS'),
+(3,'PUBG: Battlegrounds','Battle Royale'),
+(4,'Clash Royale','Strategy'),
+(5,'Valorant','Tactical Shooter');
 
-INSERT INTO "TournamentStatuses" ("Title") VALUES
-('Регистрация'), 
-('Открыт'),      
-('В процессе'),  
-('Завершен'),    
-('Черновик'),    
-('Отменен');     
+-- =========================
+-- TOURNAMENT STATUSES
+-- =========================
+INSERT INTO "TournamentStatuses" ("Id","Title") VALUES
+(1,'Запланирован'),
+(2,'Открыт'),
+(3,'В процессе'),
+(4,'Завершен'),
+(5,'Отменен');
 
-INSERT INTO "TournamentSystems" ("Title") VALUES
-('Single Elimination'),
-('Double Elimination'),
-('Swiss');
+-- =========================
+-- TOURNAMENT SYSTEMS
+-- =========================
+INSERT INTO "TournamentSystems" ("Id","Title") VALUES
+(1,'single elimination'),
+(2,'double elimination'),
+(3,'swiss'),
+(4,'round robin'),
+(5,'group stage');
 
-INSERT INTO "ApplicationStatuses" ("Title") VALUES
-('На рассмотрении'),
-('Одобрена'),
-('Отклонена'),
-('Отозвана'),
-('Завершена');
+-- =========================
+-- MATCH STAGES
+-- =========================
+INSERT INTO "MatchStages" ("Id","Title") VALUES
+(1,'Групповой этап'),
+(2,'Четвертьфинал'),
+(3,'Полуфинал'),
+(4,'Финал'),
+(5,'Матч за 3 место');
 
-INSERT INTO "MatchStages" ("Title") VALUES
-('Групповой этап'),
-('Четвертьфинал'),
-('Полуфинал'),
-('Финал'),
-('Гранд-финал');
+-- =========================
+-- BRACKET TYPES
+-- =========================
+INSERT INTO "TournamentBracketTypes" ("Id","Title") VALUES
+(1,'Upper'),
+(2,'Lower'),
+(3,'Final'),
+(4,'Main'),
+(5,'Swiss');
 
-INSERT INTO "TournamentBracketTypes" ("Title") VALUES
-('Upper'),
-('Lower'),
-('Final');
+-- =========================
+-- APPLICATION STATUSES
+-- =========================
+INSERT INTO "ApplicationStatuses" ("Id","Title") VALUES
+(1,'На рассмотрении'),
+(2,'Одобрена'),
+(3,'Отклонена'),
+(4,'Отозвана'),
+(5,'Завершена');
 
+-- =========================
+-- TEAMS
+-- =========================
+INSERT INTO "Teams"
+("Id","Title","DisciplineId","CaptainId","CreatedAt")
+VALUES
+(1,'Radiant',1,3,CURRENT_DATE),
+(2,'Dire',1,4,CURRENT_DATE),
+(3,'Mirage',2,5,CURRENT_DATE),
+(4,'Inferno',2,6,CURRENT_DATE),
+(5,'Phoenix',1,7,CURRENT_DATE);
 
-INSERT INTO "Teams" ("Title","DisciplineId","CaptainId","CreatedAt") VALUES
-('CyberStorm',1,4,'2026-02-01'),
-('NightRaid',1,3,'2026-02-02'),
-('FireLine',2,5,'2026-02-03'),
-('SkyForce',2,6,'2026-02-04'),
-('RoyalKings',4,4,'2026-02-05');
+-- =========================
+-- TEAM MEMBERS
+-- =========================
+INSERT INTO "TeamMembers"
+("Id","TeamId","UserId","JoinedAt")
+VALUES
+(1,1,3,CURRENT_DATE),
+(2,2,4,CURRENT_DATE),
+(3,3,5,CURRENT_DATE),
+(4,4,6,CURRENT_DATE),
+(5,5,7,CURRENT_DATE);
 
-INSERT INTO "TeamMembers" ("TeamId","UserId","JoinedAt") VALUES
-(1,4,'2026-02-01'),
-(1,3,'2026-02-01'),
-(2,3,'2026-02-02'),
-(3,5,'2026-02-03'),
-(4,6,'2026-02-04');
-
+-- =========================
+-- TOURNAMENTS
+-- =========================
 INSERT INTO "Tournaments"
-("Title","DisciplineId","StartDate","EndDate","PrizePool","MinTeamSize","StatusId","OrganizerId","SystemId")
+("Id","Title","DisciplineId","StartDate","EndDate",
+ "PrizePool","MinTeamSize","StatusId","OrganizerId","SystemId","IsDeleted")
 VALUES
-('Dota Spring Cup',1,'2026-03-10','2026-03-20',100000,5,2,2,1),
-('CS Winter Cup',2,'2026-04-01','2026-04-10',150000,5,1,2,2),
-('PUBG Masters',3,'2026-05-01','2026-05-15',200000,4,1,2,2),
-('Clash Royale Open',4,'2026-06-01','2026-06-05',50000,2,4,2,1),
-('Valorant Pro League',5,'2026-07-01','2026-07-20',250000,5,1,2,3);
+(1,'Dota Spring Cup',1,CURRENT_DATE,CURRENT_DATE + INTERVAL '7 days',100000,1,2,2,1,false),
+(2,'CS Major',2,CURRENT_DATE,CURRENT_DATE + INTERVAL '10 days',200000,1,2,2,1,false),
+(3,'PUBG Open',3,CURRENT_DATE,CURRENT_DATE + INTERVAL '5 days',50000,1,1,2,3,false),
+(4,'Clash Masters',4,CURRENT_DATE,CURRENT_DATE + INTERVAL '4 days',30000,1,1,2,1,false),
+(5,'Dota Championship',1,CURRENT_DATE,CURRENT_DATE + INTERVAL '6 days',150000,1,3,2,2,false);
 
-INSERT INTO "TournamentApplications"
-("TournamentId","TeamId","StatusId")
-VALUES
-(1,1,2),
-(1,2,1),
-(2,3,2),
-(2,4,3),
-(4,5,2);
-
+-- =========================
+-- TOURNAMENT PARTICIPANTS
+-- =========================
 INSERT INTO "TournamentParticipants"
-("TournamentId","TeamId")
+("Id","TournamentId","TeamId","IsDeleted")
 VALUES
-(1,1),
-(2,3),
-(4,5),
-(2,4),
-(1,2);
+(1,1,1,false),
+(2,1,2,false),
+(3,1,5,false),
+(4,2,3,false),
+(5,2,4,false);
 
+-- =========================
+-- MATCHES
+-- =========================
 INSERT INTO "Matches"
-("TournamentId","TeamAId","TeamBId","MatchDate","StageId","IsFinished")
+("Id","TournamentId","TeamAId","TeamBId",
+ "MatchDate","StageId","IsFinished")
 VALUES
-(1,1,2,'2026-03-11 18:00',1,true),
-(2,3,4,'2026-04-02 19:00',3,true),
-(4,5,1,'2026-06-02 15:00',4,false),
-(1,2,1,'2026-03-12 18:00',1,false),
-(2,4,3,'2026-04-03 20:00',4,true);
+(1,1,1,2,CURRENT_TIMESTAMP,2,false),
+(2,2,3,4,CURRENT_TIMESTAMP,2,false),
+(3,1,1,5,CURRENT_TIMESTAMP,1,false),
+(4,1,2,5,CURRENT_TIMESTAMP,1,false),
+(5,2,3,4,CURRENT_TIMESTAMP,3,false);
 
+-- =========================
+-- MATCH RESULTS
+-- =========================
 INSERT INTO "MatchResults"
-("MatchId","ScoreTeamA","ScoreTeamB","WinnerTeamId")
+("Id","MatchId","ScoreTeamA","ScoreTeamB","WinnerTeamId")
 VALUES
-(1,2,1,1),
-(2,16,10,3),
-(5,16,14,4),
-(3,0,0,NULL),
-(4,1,2,1);
+(1,1,2,1,1),
+(2,2,16,10,3),
+(3,3,1,0,1),
+(4,4,0,1,5),
+(5,5,16,14,3);
