@@ -8,4 +8,5 @@ public interface ITeamService
     Task<TeamReadDto> GetByIdAsync(int id);
     Task CreateAsync(TeamCreateDto dto, int currentUserId, string role);
     Task DeleteAsync(int id, int currentUserId, string role);
+    Task UpdateAsync(int id, TeamUpdateDto dto, int currentUserId, string role);
 }

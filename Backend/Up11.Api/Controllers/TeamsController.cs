@@ -34,6 +34,17 @@ public class TeamsController(ITeamService service) : ControllerBase
     }
 
     [Authorize]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, TeamUpdateDto dto)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var role = User.FindFirst(ClaimTypes.Role)!.Value;
+
+        await _service.UpdateAsync(id, dto, userId, role);
+        return NoContent();
+    }
+
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

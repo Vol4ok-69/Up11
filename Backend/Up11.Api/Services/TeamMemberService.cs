@@ -94,6 +94,9 @@ public class TeamMemberService(DataBaseContext context) : ITeamMemberService
         if (!isSelf && !isCaptain && !isAdmin)
             throw new UnauthorizedAccessException("Недостаточно прав");
 
+        if (member.Team.CaptainId == member.UserId)
+            throw new ArgumentException("Капитан не может покинуть команду. Сначала нужно переназначить капитана");
+
         _context.TeamMembers.Remove(member);
         await _context.SaveChangesAsync();
     }
