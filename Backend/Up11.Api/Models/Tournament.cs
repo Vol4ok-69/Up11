@@ -17,9 +17,13 @@ public partial class Tournament
 
     public decimal PrizePool { get; set; }
 
+    public int MinTeamSize { get; set; }
+
     public int StatusId { get; set; }
 
     public int OrganizerId { get; set; }
+
+    public bool IsDeleted { get; set; }
 
     public virtual Discipline Discipline { get; set; } = null!;
 

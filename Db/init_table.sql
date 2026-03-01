@@ -54,8 +54,10 @@ CREATE TABLE "Tournaments" (
     "StartDate" DATE NOT NULL,
     "EndDate" DATE NOT NULL,
     "PrizePool" NUMERIC(12,2) NOT NULL CHECK ("PrizePool" >= 0),
+    "MinTeamSize" INT NOT NULL CHECK ("MinTeamSize" > 0),
     "StatusId" INT NOT NULL,
     "OrganizerId" INT NOT NULL,
+    "IsDeleted" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("DisciplineId") REFERENCES "Disciplines"("Id"),
     FOREIGN KEY ("StatusId") REFERENCES "TournamentStatuses"("Id"),
     FOREIGN KEY ("OrganizerId") REFERENCES "Users"("Id")
@@ -72,6 +74,7 @@ CREATE TABLE "TournamentApplications" (
     "TeamId" INT NOT NULL,
     "StatusId" INT NOT NULL,
     "AppliedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "IsDeleted" BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE ("TournamentId","TeamId"),
     FOREIGN KEY ("TournamentId") REFERENCES "Tournaments"("Id") ON DELETE CASCADE,
     FOREIGN KEY ("TeamId") REFERENCES "Teams"("Id") ON DELETE CASCADE,
@@ -82,6 +85,7 @@ CREATE TABLE "TournamentParticipants" (
     "Id" SERIAL PRIMARY KEY,
     "TournamentId" INT NOT NULL,
     "TeamId" INT NOT NULL,
+    "IsDeleted" BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE ("TournamentId","TeamId"),
     FOREIGN KEY ("TournamentId") REFERENCES "Tournaments"("Id") ON DELETE CASCADE,
     FOREIGN KEY ("TeamId") REFERENCES "Teams"("Id") ON DELETE CASCADE

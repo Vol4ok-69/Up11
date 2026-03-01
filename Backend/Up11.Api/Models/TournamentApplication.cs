@@ -15,6 +15,8 @@ public partial class TournamentApplication
 
     public DateTime AppliedAt { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual ApplicationStatus Status { get; set; } = null!;
 
     public virtual Team Team { get; set; } = null!;

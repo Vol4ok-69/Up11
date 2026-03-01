@@ -11,6 +11,8 @@ public partial class TournamentParticipant
 
     public int TeamId { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual Team Team { get; set; } = null!;
 
     public virtual Tournament Tournament { get; set; } = null!;

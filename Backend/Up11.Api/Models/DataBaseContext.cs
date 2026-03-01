@@ -164,6 +164,7 @@ public partial class DataBaseContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("Tournaments_pkey");
 
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.PrizePool).HasPrecision(12, 2);
             entity.Property(e => e.Title).HasMaxLength(150);
 
@@ -192,6 +193,7 @@ public partial class DataBaseContext : DbContext
             entity.Property(e => e.AppliedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
 
             entity.HasOne(d => d.Status).WithMany(p => p.TournamentApplications)
                 .HasForeignKey(d => d.StatusId)
@@ -212,6 +214,8 @@ public partial class DataBaseContext : DbContext
             entity.HasKey(e => e.Id).HasName("TournamentParticipants_pkey");
 
             entity.HasIndex(e => new { e.TournamentId, e.TeamId }, "TournamentParticipants_TournamentId_TeamId_key").IsUnique();
+
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
 
             entity.HasOne(d => d.Team).WithMany(p => p.TournamentParticipants)
                 .HasForeignKey(d => d.TeamId)
@@ -254,11 +258,6 @@ public partial class DataBaseContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Users_RoleId_fkey");
         });
-
-        modelBuilder.Entity<User>()
-            .HasQueryFilter(u => !u.IsDeleted);
-
-        base.OnModelCreating(modelBuilder);
 
         OnModelCreatingPartial(modelBuilder);
     }
