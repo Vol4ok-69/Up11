@@ -14,17 +14,32 @@ public class MatchStagesController(IMatchStageService service)
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
-        => Ok(await _service.GetAllAsync());
+    #region Swagger
+    [ProducesResponseType(typeof(IEnumerable<MatchStageReadDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<IEnumerable<MatchStageReadDto>>> GetAll()
+         => Ok(await _service.GetAllAsync());
 
     [Authorize]
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    #region Swagger
+    [ProducesResponseType(typeof(MatchStageReadDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<MatchStageReadDto>> Get(int id)
         => Ok(await _service.GetByIdAsync(id));
 
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
-    public async Task<IActionResult> Create(MatchStageCreateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Create(MatchStageCreateDto dto)
     {
         await _service.CreateAsync(dto);
         return StatusCode(201);
@@ -32,7 +47,13 @@ public class MatchStagesController(IMatchStageService service)
 
     [Authorize(Policy = "AdminOnly")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, MatchStageUpdateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Update(int id, MatchStageUpdateDto dto)
     {
         await _service.UpdateAsync(id, dto);
         return NoContent();
@@ -40,7 +61,12 @@ public class MatchStagesController(IMatchStageService service)
 
     [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);
         return NoContent();

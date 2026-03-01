@@ -16,12 +16,22 @@ public class TournamentParticipantsController(
 
     [Authorize]
     [HttpGet("tournament/{tournamentId}")]
-    public async Task<IActionResult> GetByTournament(int tournamentId)
+    #region Swagger
+    [ProducesResponseType(typeof(IEnumerable<TournamentParticipantReadDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<IEnumerable<TournamentParticipantReadDto>>> GetByTournament(int tournamentId)
         => Ok(await _service.GetByTournamentAsync(tournamentId));
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Add(TournamentParticipantCreateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> Add(TournamentParticipantCreateDto dto)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
@@ -32,7 +42,12 @@ public class TournamentParticipantsController(
 
     [Authorize]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Remove(int id)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> Remove(int id)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;

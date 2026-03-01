@@ -14,8 +14,13 @@ public class TournamentApplicationsController(ITournamentApplicationService serv
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Create(
-        TournamentApplicationCreateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> Create(TournamentApplicationCreateDto dto)
     {
         var userId = int.Parse(
             User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -27,9 +32,13 @@ public class TournamentApplicationsController(ITournamentApplicationService serv
 
     [Authorize]
     [HttpPatch("{id}/status")]
-    public async Task<IActionResult> UpdateStatus(
-        int id,
-        TournamentApplicationUpdateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> UpdateStatus(int id, TournamentApplicationUpdateDto dto)
     {
         var userId = int.Parse(
             User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -46,11 +55,19 @@ public class TournamentApplicationsController(ITournamentApplicationService serv
 
     [Authorize]
     [HttpGet("tournament/{tournamentId}")]
-    public async Task<IActionResult> GetByTournament(int tournamentId)
+    #region Swagger
+    [ProducesResponseType(typeof(IEnumerable<TournamentApplicationReadDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<IEnumerable<TournamentApplicationReadDto>>> GetByTournament(int tournamentId)
         => Ok(await _service.GetByTournamentAsync(tournamentId));
 
     [Authorize]
     [HttpGet("{id}/history")]
-    public async Task<IActionResult> GetHistory(int id)
+    #region Swagger
+    [ProducesResponseType(typeof(IEnumerable<TournamentApplicationStatusHistoryDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<IEnumerable<TournamentApplicationStatusHistoryDto>>> GetHistory(int id)
         => Ok(await _service.GetHistoryAsync(id));
 }

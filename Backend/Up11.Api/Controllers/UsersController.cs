@@ -14,17 +14,31 @@ public class UsersController(IUserService service) : ControllerBase
 
     [Authorize(Policy = "AdminOnly")]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    #region Swagger
+    [ProducesResponseType(typeof(IEnumerable<UserReadDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult<IEnumerable<UserReadDto>>> GetAll()
         => Ok(await _service.GetAllAsync());
 
     [Authorize]
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
-        => Ok(await _service.GetByIdAsync(id));
+    #region Swagger
+    [ProducesResponseType(typeof(UserReadDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<UserReadDto>> Get(int id)
+            => Ok(await _service.GetByIdAsync(id));
 
     [Authorize(Policy = "AdminOnly")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, UserUpdateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Update(int id, UserUpdateDto dto)
     {
         await _service.UpdateAsync(id, dto);
         return NoContent();
@@ -32,7 +46,13 @@ public class UsersController(IUserService service) : ControllerBase
 
     [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);
         return NoContent();
@@ -40,7 +60,12 @@ public class UsersController(IUserService service) : ControllerBase
 
     [Authorize]
     [HttpPatch("{id}/change/password")]
-    public async Task<IActionResult> ChangePassword(int id, ChangePasswordDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> ChangePassword(int id, ChangePasswordDto dto)
     {
         var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         var role = User.FindFirst(ClaimTypes.Role)!.Value;
@@ -51,7 +76,13 @@ public class UsersController(IUserService service) : ControllerBase
 
     [Authorize]
     [HttpPatch("{id}/change/email")]
-    public async Task<IActionResult> ChangeEmail(int id, ChangeEmailDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> ChangeEmail(int id, ChangeEmailDto dto)
     {
         var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         var role = User.FindFirst(ClaimTypes.Role)!.Value;
@@ -62,7 +93,13 @@ public class UsersController(IUserService service) : ControllerBase
 
     [Authorize(Policy = "AdminOnly")]
     [HttpPatch("{id}/block")]
-    public async Task<IActionResult> Block(int id)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Block(int id)
     {
         await _service.BlockAsync(id);
         return NoContent();
@@ -70,7 +107,13 @@ public class UsersController(IUserService service) : ControllerBase
 
     [Authorize(Policy = "AdminOnly")]
     [HttpPatch("{id}/unblock")]
-    public async Task<IActionResult> Unblock(int id)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Unblock(int id)
     {
         await _service.UnblockAsync(id);
         return NoContent();

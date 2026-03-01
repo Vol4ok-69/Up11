@@ -14,12 +14,23 @@ public class MatchesController(IMatchService service) : ControllerBase
 
     [Authorize]
     [HttpGet("tournament/{tournamentId}")]
-    public async Task<IActionResult> GetByTournament(int tournamentId)
+    #region Swagger
+    [ProducesResponseType(typeof(IEnumerable<MatchReadDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<IEnumerable<MatchReadDto>>> GetByTournament(int tournamentId)
         => Ok(await _service.GetByTournamentAsync(tournamentId));
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Create(MatchCreateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> Create(MatchCreateDto dto)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
@@ -30,7 +41,13 @@ public class MatchesController(IMatchService service) : ControllerBase
 
     [Authorize]
     [HttpPost("{id}/result")]
-    public async Task<IActionResult> AddResult(int id, MatchResultCreateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> AddResult(int id, MatchResultCreateDto dto)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;

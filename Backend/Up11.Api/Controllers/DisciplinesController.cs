@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Up11.Api.DTOs.Discipline;
 using Up11.Api.Interfaces;
+using Up11.Api.Models;
 
 namespace Up11.Api.Controllers;
 
@@ -13,17 +14,32 @@ public class DisciplinesController(IDisciplineService service) : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    #region Swagger
+    [ProducesResponseType(typeof(IEnumerable<Discipline>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<IEnumerable<Discipline>>> GetAll()
         => Ok(await _service.GetAllAsync());
 
     [Authorize]
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    #region Swagger
+    [ProducesResponseType(typeof(Discipline), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<Discipline>> Get(int id)
         => Ok(await _service.GetByIdAsync(id));
 
     [Authorize(Policy = "OrganizerOrHigher")]
     [HttpPost]
-    public async Task<IActionResult> Create(DisciplineCreateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Create(DisciplineCreateDto dto)
     {
         await _service.CreateAsync(dto);
         return StatusCode(201);
@@ -31,7 +47,13 @@ public class DisciplinesController(IDisciplineService service) : ControllerBase
 
     [Authorize(Policy = "OrganizerOrHigher")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, DisciplineUpdateDto dto)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Update(int id, DisciplineUpdateDto dto)
     {
         await _service.UpdateAsync(id, dto);
         return NoContent();
@@ -39,7 +61,12 @@ public class DisciplinesController(IDisciplineService service) : ControllerBase
 
     [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    #endregion
+    public async Task<ActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);
         return NoContent();
