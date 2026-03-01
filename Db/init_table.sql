@@ -47,6 +47,12 @@ CREATE TABLE "TournamentStatuses" (
     "Title" VARCHAR(50) NOT NULL UNIQUE
 );
 
+CREATE TABLE "TournamentSystems" (
+    "Id" SERIAL PRIMARY KEY,
+    "Title" VARCHAR(50) NOT NULL UNIQUE
+);
+
+
 CREATE TABLE "Tournaments" (
     "Id" SERIAL PRIMARY KEY,
     "Title" VARCHAR(150) NOT NULL,
@@ -57,10 +63,12 @@ CREATE TABLE "Tournaments" (
     "MinTeamSize" INT NOT NULL CHECK ("MinTeamSize" > 0),
     "StatusId" INT NOT NULL,
     "OrganizerId" INT NOT NULL,
+    "SystemId" INT NOT NULL,
     "IsDeleted" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("DisciplineId") REFERENCES "Disciplines"("Id"),
     FOREIGN KEY ("StatusId") REFERENCES "TournamentStatuses"("Id"),
-    FOREIGN KEY ("OrganizerId") REFERENCES "Users"("Id")
+    FOREIGN KEY ("OrganizerId") REFERENCES "Users"("Id"),
+    FOREIGN KEY ("SystemId") REFERENCES "TournamentSystems"("Id")
 );
 
 CREATE TABLE "ApplicationStatuses" (
@@ -141,3 +149,26 @@ CREATE TABLE "TournamentApplicationStatusHistory" (
     FOREIGN KEY ("NewStatusId") REFERENCES "ApplicationStatuses"("Id"),
     FOREIGN KEY ("ChangedByUserId") REFERENCES "Users"("Id")
 );
+
+CREATE TABLE "TournamentBracketTypes" (
+    "Id" SERIAL PRIMARY KEY,
+    "Title" VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE "TournamentBrackets" (
+    "Id" SERIAL PRIMARY KEY,
+    "TournamentId" INT NOT NULL,
+    "StageId" INT NOT NULL,
+    "Position" INT NOT NULL,
+    "MatchId" INT NULL,
+    "ParentBracketId" INT NULL,
+    "SlotInParent" INT NULL,
+    "BracketTypeId" INT NOT NULL DEFAULT 1,
+    FOREIGN KEY ("TournamentId") REFERENCES "Tournaments"("Id") ON DELETE CASCADE,
+    FOREIGN KEY ("StageId") REFERENCES "MatchStages"("Id"),
+    FOREIGN KEY ("MatchId") REFERENCES "Matches"("Id"),
+    FOREIGN KEY ("BracketTypeId") REFERENCES "TournamentBracketTypes"("Id"),
+    FOREIGN KEY ("ParentBracketId") REFERENCES "TournamentBrackets"("Id")
+);
+
+

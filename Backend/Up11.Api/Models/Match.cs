@@ -9,9 +9,9 @@ public partial class Match
 
     public int TournamentId { get; set; }
 
-    public int TeamAid { get; set; }
+    public int TeamAId { get; set; }
 
-    public int TeamBid { get; set; }
+    public int TeamBId { get; set; }
 
     public DateTime MatchDate { get; set; }
 
@@ -28,4 +28,6 @@ public partial class Match
     public virtual Team TeamB { get; set; } = null!;
 
     public virtual Tournament Tournament { get; set; } = null!;
+
+    public virtual ICollection<TournamentBracket> TournamentBrackets { get; set; } = new List<TournamentBracket>();
 }

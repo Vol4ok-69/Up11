@@ -37,9 +37,15 @@ public partial class DataBaseContext : DbContext
 
     public virtual DbSet<TournamentApplicationStatusHistory> TournamentApplicationStatusHistories { get; set; }
 
+    public virtual DbSet<TournamentBracket> TournamentBrackets { get; set; }
+
+    public virtual DbSet<TournamentBracketType> TournamentBracketTypes { get; set; }
+
     public virtual DbSet<TournamentParticipant> TournamentParticipants { get; set; }
 
     public virtual DbSet<TournamentStatus> TournamentStatuses { get; set; }
+
+    public virtual DbSet<TournamentSystem> TournamentSystems { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -72,8 +78,8 @@ public partial class DataBaseContext : DbContext
 
             entity.Property(e => e.IsFinished).HasDefaultValue(false);
             entity.Property(e => e.MatchDate).HasColumnType("timestamp without time zone");
-            entity.Property(e => e.TeamAid).HasColumnName("TeamAId");
-            entity.Property(e => e.TeamBid).HasColumnName("TeamBId");
+            entity.Property(e => e.TeamAId).HasColumnName("TeamAId");
+            entity.Property(e => e.TeamBId).HasColumnName("TeamBId");
 
             entity.HasOne(d => d.Stage).WithMany(p => p.Matches)
                 .HasForeignKey(d => d.StageId)
@@ -81,12 +87,12 @@ public partial class DataBaseContext : DbContext
                 .HasConstraintName("Matches_StageId_fkey");
 
             entity.HasOne(d => d.TeamA).WithMany(p => p.MatchTeamAs)
-                .HasForeignKey(d => d.TeamAid)
+                .HasForeignKey(d => d.TeamAId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Matches_TeamAId_fkey");
 
             entity.HasOne(d => d.TeamB).WithMany(p => p.MatchTeamBs)
-                .HasForeignKey(d => d.TeamBid)
+                .HasForeignKey(d => d.TeamBId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Matches_TeamBId_fkey");
 
@@ -184,6 +190,11 @@ public partial class DataBaseContext : DbContext
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Tournaments_StatusId_fkey");
+
+            entity.HasOne(d => d.System).WithMany(p => p.Tournaments)
+                .HasForeignKey(d => d.SystemId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Tournaments_SystemId_fkey");
         });
 
         modelBuilder.Entity<TournamentApplication>(entity =>
@@ -241,6 +252,44 @@ public partial class DataBaseContext : DbContext
                 .HasConstraintName("TournamentApplicationStatusHistory_OldStatusId_fkey");
         });
 
+        modelBuilder.Entity<TournamentBracket>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("TournamentBrackets_pkey");
+
+            entity.Property(e => e.BracketTypeId).HasDefaultValue(1);
+
+            entity.HasOne(d => d.BracketType).WithMany(p => p.TournamentBrackets)
+                .HasForeignKey(d => d.BracketTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("TournamentBrackets_BracketTypeId_fkey");
+
+            entity.HasOne(d => d.Match).WithMany(p => p.TournamentBrackets)
+                .HasForeignKey(d => d.MatchId)
+                .HasConstraintName("TournamentBrackets_MatchId_fkey");
+
+            entity.HasOne(d => d.ParentBracket).WithMany(p => p.InverseParentBracket)
+                .HasForeignKey(d => d.ParentBracketId)
+                .HasConstraintName("TournamentBrackets_ParentBracketId_fkey");
+
+            entity.HasOne(d => d.Stage).WithMany(p => p.TournamentBrackets)
+                .HasForeignKey(d => d.StageId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("TournamentBrackets_StageId_fkey");
+
+            entity.HasOne(d => d.Tournament).WithMany(p => p.TournamentBrackets)
+                .HasForeignKey(d => d.TournamentId)
+                .HasConstraintName("TournamentBrackets_TournamentId_fkey");
+        });
+
+        modelBuilder.Entity<TournamentBracketType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("TournamentBracketTypes_pkey");
+
+            entity.HasIndex(e => e.Title, "TournamentBracketTypes_Title_key").IsUnique();
+
+            entity.Property(e => e.Title).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<TournamentParticipant>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("TournamentParticipants_pkey");
@@ -263,6 +312,15 @@ public partial class DataBaseContext : DbContext
             entity.HasKey(e => e.Id).HasName("TournamentStatuses_pkey");
 
             entity.HasIndex(e => e.Title, "TournamentStatuses_Title_key").IsUnique();
+
+            entity.Property(e => e.Title).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<TournamentSystem>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("TournamentSystems_pkey");
+
+            entity.HasIndex(e => e.Title, "TournamentSystems_Title_key").IsUnique();
 
             entity.Property(e => e.Title).HasMaxLength(50);
         });

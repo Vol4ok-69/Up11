@@ -23,6 +23,8 @@ public partial class Tournament
 
     public int OrganizerId { get; set; }
 
+    public int SystemId { get; set; }
+
     public bool IsDeleted { get; set; }
 
     public virtual Discipline Discipline { get; set; } = null!;
@@ -33,7 +35,11 @@ public partial class Tournament
 
     public virtual TournamentStatus Status { get; set; } = null!;
 
+    public virtual TournamentSystem System { get; set; } = null!;
+
     public virtual ICollection<TournamentApplication> TournamentApplications { get; set; } = new List<TournamentApplication>();
+
+    public virtual ICollection<TournamentBracket> TournamentBrackets { get; set; } = new List<TournamentBracket>();
 
     public virtual ICollection<TournamentParticipant> TournamentParticipants { get; set; } = new List<TournamentParticipant>();
 }

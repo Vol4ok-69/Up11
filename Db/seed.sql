@@ -29,6 +29,11 @@ INSERT INTO "TournamentStatuses" ("Title") VALUES
 ('Черновик'),    
 ('Отменен');     
 
+INSERT INTO "TournamentSystems" ("Title") VALUES
+('Single Elimination'),
+('Double Elimination'),
+('Swiss');
+
 INSERT INTO "ApplicationStatuses" ("Title") VALUES
 ('На рассмотрении'),
 ('Одобрена'),
@@ -42,6 +47,12 @@ INSERT INTO "MatchStages" ("Title") VALUES
 ('Полуфинал'),
 ('Финал'),
 ('Гранд-финал');
+
+INSERT INTO "TournamentBracketTypes" ("Title") VALUES
+('Upper'),
+('Lower'),
+('Final');
+
 
 INSERT INTO "Teams" ("Title","DisciplineId","CaptainId","CreatedAt") VALUES
 ('CyberStorm',1,4,'2026-02-01'),
@@ -58,13 +69,13 @@ INSERT INTO "TeamMembers" ("TeamId","UserId","JoinedAt") VALUES
 (4,6,'2026-02-04');
 
 INSERT INTO "Tournaments"
-("Title","DisciplineId","StartDate","EndDate","PrizePool","MinTeamSize","StatusId","OrganizerId")
+("Title","DisciplineId","StartDate","EndDate","PrizePool","MinTeamSize","StatusId","OrganizerId","SystemId")
 VALUES
-('Dota Spring Cup',1,'2026-03-10','2026-03-20',100000,5,2,2),
-('CS Winter Cup',2,'2026-04-01','2026-04-10',150000,5,1,2),
-('PUBG Masters',3,'2026-05-01','2026-05-15',200000,4,1,2),
-('Clash Royale Open',4,'2026-06-01','2026-06-05',50000,2,4,2),
-('Valorant Pro League',5,'2026-07-01','2026-07-20',250000,5,1,2);
+('Dota Spring Cup',1,'2026-03-10','2026-03-20',100000,5,2,2,1),
+('CS Winter Cup',2,'2026-04-01','2026-04-10',150000,5,1,2,2),
+('PUBG Masters',3,'2026-05-01','2026-05-15',200000,4,1,2,2),
+('Clash Royale Open',4,'2026-06-01','2026-06-05',50000,2,4,2,1),
+('Valorant Pro League',5,'2026-07-01','2026-07-20',250000,5,1,2,3);
 
 INSERT INTO "TournamentApplications"
 ("TournamentId","TeamId","StatusId")
