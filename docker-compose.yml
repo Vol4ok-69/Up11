@@ -9,8 +9,8 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - ./Db/init_table.sql:/docker-entrypoint-initdb.d/01_init_table.sql
-      - ./Db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
+      - ./db/init_table.sql:/docker-entrypoint-initdb.d/01_init_table.sql
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin69 -d esports-db"]
@@ -20,7 +20,7 @@ services:
 
   backend:
     build:
-      context: ./Backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: esports-backend
     depends_on:
@@ -34,6 +34,17 @@ services:
       Jwt__ExpireMinutes: 60
     ports:
       - "5000:8080"
-
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: esports-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 volumes:
   pgdata:
