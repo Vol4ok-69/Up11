@@ -1,6 +1,8 @@
-Backend/.vs/
-Backend/Up11.Api/obj/
-Backend/Up11.Api/bin/
+backend/.vs/
+backend/Up11.Api/obj/
+backend/Up11.Api/bin/
 cs_files_and_appsettings.json.txt
 controllers.txt
 services.txt
+structure.txt
+
