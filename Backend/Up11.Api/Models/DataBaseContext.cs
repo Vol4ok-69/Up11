@@ -35,6 +35,8 @@ public partial class DataBaseContext : DbContext
 
     public virtual DbSet<TournamentApplication> TournamentApplications { get; set; }
 
+    public virtual DbSet<TournamentApplicationStatusHistory> TournamentApplicationStatusHistories { get; set; }
+
     public virtual DbSet<TournamentParticipant> TournamentParticipants { get; set; }
 
     public virtual DbSet<TournamentStatus> TournamentStatuses { get; set; }
@@ -207,6 +209,36 @@ public partial class DataBaseContext : DbContext
             entity.HasOne(d => d.Tournament).WithMany(p => p.TournamentApplications)
                 .HasForeignKey(d => d.TournamentId)
                 .HasConstraintName("TournamentApplications_TournamentId_fkey");
+        });
+
+        modelBuilder.Entity<TournamentApplicationStatusHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("TournamentApplicationStatusHistory_pkey");
+
+            entity.ToTable("TournamentApplicationStatusHistory");
+
+            entity.Property(e => e.ChangedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone");
+
+            entity.HasOne(d => d.Application).WithMany(p => p.TournamentApplicationStatusHistories)
+                .HasForeignKey(d => d.ApplicationId)
+                .HasConstraintName("TournamentApplicationStatusHistory_ApplicationId_fkey");
+
+            entity.HasOne(d => d.ChangedByUser).WithMany(p => p.TournamentApplicationStatusHistories)
+                .HasForeignKey(d => d.ChangedByUserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("TournamentApplicationStatusHistory_ChangedByUserId_fkey");
+
+            entity.HasOne(d => d.NewStatus).WithMany(p => p.TournamentApplicationStatusHistoryNewStatuses)
+                .HasForeignKey(d => d.NewStatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("TournamentApplicationStatusHistory_NewStatusId_fkey");
+
+            entity.HasOne(d => d.OldStatus).WithMany(p => p.TournamentApplicationStatusHistoryOldStatuses)
+                .HasForeignKey(d => d.OldStatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("TournamentApplicationStatusHistory_OldStatusId_fkey");
         });
 
         modelBuilder.Entity<TournamentParticipant>(entity =>

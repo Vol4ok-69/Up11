@@ -29,5 +29,7 @@ public partial class User
 
     public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
 
+    public virtual ICollection<TournamentApplicationStatusHistory> TournamentApplicationStatusHistories { get; set; } = new List<TournamentApplicationStatusHistory>();
+
     public virtual ICollection<Tournament> Tournaments { get; set; } = new List<Tournament>();
 }

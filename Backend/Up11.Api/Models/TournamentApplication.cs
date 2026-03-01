@@ -22,4 +22,6 @@ public partial class TournamentApplication
     public virtual Team Team { get; set; } = null!;
 
     public virtual Tournament Tournament { get; set; } = null!;
+
+    public virtual ICollection<TournamentApplicationStatusHistory> TournamentApplicationStatusHistories { get; set; } = new List<TournamentApplicationStatusHistory>();
 }

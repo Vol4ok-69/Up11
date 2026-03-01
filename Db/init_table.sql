@@ -128,3 +128,16 @@ CHECK (
     OR
     ("ScoreTeamA" <> "ScoreTeamB" AND "WinnerTeamId" IS NOT NULL)
 );
+
+CREATE TABLE "TournamentApplicationStatusHistory" (
+    "Id" SERIAL PRIMARY KEY,
+    "ApplicationId" INT NOT NULL,
+    "OldStatusId" INT NOT NULL,
+    "NewStatusId" INT NOT NULL,
+    "ChangedByUserId" INT NOT NULL,
+    "ChangedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("ApplicationId") REFERENCES "TournamentApplications"("Id") ON DELETE CASCADE,
+    FOREIGN KEY ("OldStatusId") REFERENCES "ApplicationStatuses"("Id"),
+    FOREIGN KEY ("NewStatusId") REFERENCES "ApplicationStatuses"("Id"),
+    FOREIGN KEY ("ChangedByUserId") REFERENCES "Users"("Id")
+);
