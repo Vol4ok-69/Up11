@@ -12,16 +12,16 @@ INSERT INTO "Roles" ("Id","Title") VALUES
 -- USERS (пароль любой, потом можно перерегистрироваться)
 -- =========================
 INSERT INTO "Users"
-("Id","Login","PasswordHash","Email","Nickname","RoleId","IsBlocked","IsDeleted")
+("Login","PasswordHash","Email","Nickname","RoleId","IsBlocked","IsDeleted")
 VALUES
-(1,'admin','hash','admin@mail.ru','Admin',1,false,false),
-(2,'organizer','hash','org@mail.ru','Organizer',2,false,false),
-(3,'player1','hash','p1@mail.ru','PlayerOne',3,false,false),
-(4,'player2','hash','p2@mail.ru','PlayerTwo',3,false,false),
-(5,'player3','hash','p3@mail.ru','PlayerThree',3,false,false),
-(6,'player4','hash','p4@mail.ru','PlayerFour',3,false,false),
-(7,'player5','hash','p5@mail.ru','PlayerFive',3,false,false),
-(8,'player6','hash','p6@mail.ru','PlayerSix',3,false,false);
+('admin','$2a$11$CpJdTOoGYoQEwlzYTs2l2uHuj6UAP8v6BNfAt2BODFuJVxmgOAOw6','admin@mail.ru','Admin',1,false,false),
+('organizer','$2a$11$CpJdTOoGYoQEwlzYTs2l2uHuj6UAP8v6BNfAt2BODFuJVxmgOAOw6','org@mail.ru','Organizer',2,false,false),
+('player1','$2a$11$CpJdTOoGYoQEwlzYTs2l2uHuj6UAP8v6BNfAt2BODFuJVxmgOAOw6','p1@mail.ru','PlayerOne',3,false,false),
+('player2','$2a$11$CpJdTOoGYoQEwlzYTs2l2uHuj6UAP8v6BNfAt2BODFuJVxmgOAOw6','p2@mail.ru','PlayerTwo',3,false,false),
+('player3','$2a$11$CpJdTOoGYoQEwlzYTs2l2uHuj6UAP8v6BNfAt2BODFuJVxmgOAOw6','p3@mail.ru','PlayerThree',3,false,false),
+('player4','$2a$11$CpJdTOoGYoQEwlzYTs2l2uHuj6UAP8v6BNfAt2BODFuJVxmgOAOw6','p4@mail.ru','PlayerFour',3,false,false),
+('player5','$2a$11$CpJdTOoGYoQEwlzYTs2l2uHuj6UAP8v6BNfAt2BODFuJVxmgOAOw6','p5@mail.ru','PlayerFive',3,false,false),
+('player6','$2a$11$CpJdTOoGYoQEwlzYTs2l2uHuj6UAP8v6BNfAt2BODFuJVxmgOAOw6','p6@mail.ru','PlayerSix',3,false,false);
 
 -- =========================
 -- DISCIPLINES

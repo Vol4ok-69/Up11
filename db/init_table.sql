@@ -8,7 +8,7 @@ CREATE TABLE "Users" (
     "Login" VARCHAR(50) NOT NULL UNIQUE,
     "PasswordHash" VARCHAR(255) NOT NULL,
     "Email" VARCHAR(100) NOT NULL UNIQUE,
-    "Nickname" VARCHAR(50) NOT NULL,
+    "Nickname" VARCHAR(50),
     "RoleId" INT NOT NULL,
     "IsBlocked" BOOLEAN NOT NULL DEFAULT FALSE,
     "IsDeleted" BOOLEAN NOT NULL DEFAULT FALSE,
