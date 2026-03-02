@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Up11.Api.Interfaces;
-using Up11.Api.Models;
 using Up11.Api.DTOs.Bracket;
 using Up11.Api.DTOs.Swiss;
+using Up11.Api.Interfaces;
+using Up11.Api.Models;
 namespace Up11.Api.Services;
 
 public class BracketService(DataBaseContext context) : IBracketService
@@ -11,6 +11,9 @@ public class BracketService(DataBaseContext context) : IBracketService
 
     public async Task GenerateAsync(int tournamentId, int currentUserId, string role)
     {
+        if (tournamentId <= 0)
+            throw new ArgumentException("Идентификатор турнира некорректен");
+
         var tournament = await _context.Tournaments
             .Include(t => t.TournamentParticipants)
             .Include(t => t.System)

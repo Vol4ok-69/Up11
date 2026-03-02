@@ -36,6 +36,9 @@ public class TournamentBracketTypeService(DataBaseContext context)
 
     public async Task CreateAsync(TournamentBracketTypeCreateDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            throw new ArgumentException("Название типа сетки не указано");
+
         if (await _context.TournamentBracketTypes.AnyAsync(s => s.Title == dto.Title))
             throw new ArgumentException("Тип сетки уже существует");
 
@@ -53,7 +56,12 @@ public class TournamentBracketTypeService(DataBaseContext context)
             ?? throw new KeyNotFoundException("Тип сетки не найден");
 
         if (dto.Title != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new ArgumentException("Название типа сетки не может быть пустым");
+
             type.Title = dto.Title;
+        }
 
         await _context.SaveChangesAsync();
     }

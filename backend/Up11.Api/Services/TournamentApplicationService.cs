@@ -15,6 +15,12 @@ public class TournamentApplicationService(DataBaseContext context)
         int currentUserId,
         string role)
     {
+        if (dto.TournamentId <= 0)
+            throw new ArgumentException("Идентификатор турнира некорректен");
+
+        if (dto.TeamId <= 0)
+            throw new ArgumentException("Идентификатор команды некорректен");
+
         var tournament = await _context.Tournaments
             .FirstOrDefaultAsync(t => t.Id == dto.TournamentId && !t.IsDeleted)
             ?? throw new KeyNotFoundException("Турнир не найден");
@@ -63,6 +69,12 @@ public class TournamentApplicationService(DataBaseContext context)
     int currentUserId,
     string role)
     {
+        if (id <= 0)
+            throw new ArgumentException("Идентификатор заявки некорректен");
+
+        if (newStatusId <= 0)
+            throw new ArgumentException("Идентификатор статуса некорректен");
+
         var application = await _context.TournamentApplications
             .Include(a => a.Tournament)
             .FirstOrDefaultAsync(a => a.Id == id && !a.IsDeleted)

@@ -5,9 +5,10 @@ export async function apiRequest(
     method: string,
     body?: any
 ) {
-    const token = typeof window !== "undefined"
-        ? localStorage.getItem("token")
-        : null
+    const token =
+        typeof window !== "undefined"
+            ? localStorage.getItem("token")
+            : null
 
     const res = await fetch(`${API_URL}${endpoint}`, {
         method,
@@ -19,8 +20,31 @@ export async function apiRequest(
     })
 
     if (!res.ok) {
-        throw new Error(await res.text())
+        let message = `Request failed with status ${res.status}`
+
+        try {
+            const errorJson = await res.json()
+            message =
+                errorJson.error ||
+                errorJson.message ||
+                JSON.stringify(errorJson)
+        } catch {
+            const text = await res.text()
+            message = text || message
+        }
+
+        throw new Error(message)
     }
 
-    return res.json()
+    const text = await res.text()
+
+    if (!text) {
+        return null
+    }
+
+    try {
+        return JSON.parse(text)
+    } catch {
+        return text
+    }
 }

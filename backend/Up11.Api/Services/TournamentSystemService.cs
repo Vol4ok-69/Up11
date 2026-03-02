@@ -36,6 +36,9 @@ public class TournamentSystemService(DataBaseContext context)
 
     public async Task CreateAsync(TournamentSystemCreateDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            throw new ArgumentException("Название системы турнира не указано");
+
         if (await _context.TournamentSystems.AnyAsync(s => s.Title == dto.Title))
             throw new ArgumentException("Система уже существует");
 
@@ -53,7 +56,12 @@ public class TournamentSystemService(DataBaseContext context)
             ?? throw new KeyNotFoundException("Система турнира не найдена");
 
         if (dto.Title != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new ArgumentException("Название системы турнира не может быть пустым");
+
             system.Title = dto.Title;
+        }
 
         await _context.SaveChangesAsync();
     }

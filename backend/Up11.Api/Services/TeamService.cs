@@ -44,6 +44,9 @@ public class TeamService(DataBaseContext context) : ITeamService
 
     public async Task CreateAsync(TeamCreateDto dto, int currentUserId, string role)
     {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            throw new ArgumentException("Название команды не указано");
+
         var roleLevel = RoleHierarchy.GetLevel(role);
 
         if (roleLevel < (int)RoleLevel.Player)
@@ -131,6 +134,9 @@ public class TeamService(DataBaseContext context) : ITeamService
 
         if (dto.Title != null)
         {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new ArgumentException("Название команды не может быть пустым");
+
             if (await _context.Teams.AnyAsync(t => t.Title == dto.Title && t.Id != id))
                 throw new ArgumentException("Команда с таким названием уже существует");
 

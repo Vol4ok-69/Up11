@@ -36,6 +36,9 @@ public class MatchStageService(DataBaseContext context)
 
     public async Task CreateAsync(MatchStageCreateDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            throw new ArgumentException("Название стадии не указано");
+
         if (await _context.MatchStages.AnyAsync(s => s.Title == dto.Title))
             throw new ArgumentException("Стадия уже существует");
 
@@ -53,7 +56,12 @@ public class MatchStageService(DataBaseContext context)
             ?? throw new KeyNotFoundException("Стадия не найдена");
 
         if (dto.Title != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new ArgumentException("Название стадии не может быть пустым");
+
             stage.Title = dto.Title;
+        }
 
         await _context.SaveChangesAsync();
     }

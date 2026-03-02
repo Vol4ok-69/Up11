@@ -11,11 +11,13 @@ import { useRouter } from "next/navigation"
 
 export default function AuthPage() {
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null)
   const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
+    setMessage(null)
 
     const formData = new FormData(e.target as HTMLFormElement)
 
@@ -27,8 +29,12 @@ export default function AuthPage() {
 
       localStorage.setItem("token", result.token)
       router.push("/")
-    } catch (err) {
-      alert("Ошибка входа")
+    } catch (err: any) {
+      if (err instanceof Error) {
+        setMessage({ text: err.message, type: "error" })
+      } else {
+        setMessage({ text: "Произошла неизвестная ошибка", type: "error" })
+      }
     } finally {
       setLoading(false)
     }
@@ -36,20 +42,37 @@ export default function AuthPage() {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
+    setMessage(null)
 
-    const formData = new FormData(e.target as HTMLFormElement)
+    const form = e.target as HTMLFormElement
+    const formData = new FormData(form)
+
+    const login = formData.get("login")
+    const password = formData.get("password")
 
     try {
       await apiRequest("/api/Auth/register", "POST", {
-        login: formData.get("login"),
+        login,
         email: formData.get("email"),
         nickname: formData.get("nickname") || null,
-        password: formData.get("password"),
+        password,
       })
 
-      alert("Регистрация успешна")
-    } catch {
-      alert("Ошибка регистрации")
+      const result = await apiRequest("/api/Auth/login", "POST", {
+        login,
+        password,
+      })
+
+      localStorage.setItem("token", result.token)
+
+      router.push("/")
+
+    } catch (err: any) {
+      if (err instanceof Error) {
+        setMessage({ text: err.message, type: "error" })
+      } else {
+        setMessage({ text: "Произошла неизвестная ошибка", type: "error" })
+      }
     } finally {
       setLoading(false)
     }
@@ -69,6 +92,16 @@ export default function AuthPage() {
             Система киберспортивной лиги
           </p>
 
+          {message && (
+            <div
+              className={`mb-4 rounded-md p-3 text-sm ${message.type === "error"
+                ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                }`}
+            >
+              {message.text}
+            </div>
+          )}
           <Tabs defaultValue="login" className="w-full">
 
             <TabsList className="grid grid-cols-2 mb-6">

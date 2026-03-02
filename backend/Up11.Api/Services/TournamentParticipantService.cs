@@ -26,6 +26,12 @@ public class TournamentParticipantService(DataBaseContext context) : ITournament
 
     public async Task AddAsync(TournamentParticipantCreateDto dto, int currentUserId, string role)
     {
+        if (dto.TournamentId <= 0)
+            throw new ArgumentException("Идентификатор турнира некорректен");
+
+        if (dto.TeamId <= 0)
+            throw new ArgumentException("Идентификатор команды некорректен");
+
         var tournament = await _context.Tournaments
             .FirstOrDefaultAsync(t => t.Id == dto.TournamentId && !t.IsDeleted)
             ?? throw new KeyNotFoundException("Турнир не найден");

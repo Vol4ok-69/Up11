@@ -36,6 +36,9 @@ public class TournamentStatusService(DataBaseContext context)
 
     public async Task CreateAsync(TournamentStatusCreateDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            throw new ArgumentException("Название статуса турнира не указано");
+
         if (await _context.TournamentStatuses.AnyAsync(s => s.Title == dto.Title))
             throw new ArgumentException("Статус уже существует");
 
@@ -53,7 +56,12 @@ public class TournamentStatusService(DataBaseContext context)
             ?? throw new KeyNotFoundException("Статус турнира не найден");
 
         if (dto.Title != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new ArgumentException("Название статуса турнира не может быть пустым");
+
             status.Title = dto.Title;
+        }
 
         await _context.SaveChangesAsync();
     }

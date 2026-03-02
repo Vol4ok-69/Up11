@@ -13,6 +13,17 @@ public class AuthService(DataBaseContext context, IJwtTokenService jwtService) :
 
     public async Task RegisterAsync(RegisterDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Login))
+            throw new ArgumentException("Логин не указан");
+
+        if (string.IsNullOrWhiteSpace(dto.Email))
+            throw new ArgumentException("Email не указан");
+
+        if (string.IsNullOrWhiteSpace(dto.Password))
+            throw new ArgumentException("Пароль не указан");
+
+
+
         if (await _context.Users.AnyAsync(u => u.Login == dto.Login))
             throw new ArgumentException("Логин уже существует");
 
@@ -39,6 +50,11 @@ public class AuthService(DataBaseContext context, IJwtTokenService jwtService) :
 
     public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Login))
+            throw new ArgumentException("Логин не указан");
+
+        if (string.IsNullOrWhiteSpace(dto.Password))
+            throw new ArgumentException("Пароль не указан");
         var user = await _context.Users
             .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Login == dto.Login)

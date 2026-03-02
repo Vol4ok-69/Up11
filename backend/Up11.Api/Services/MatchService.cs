@@ -32,6 +32,15 @@ public class MatchService(DataBaseContext context, IBracketService _bracketServi
 
     public async Task CreateAsync(MatchCreateDto dto, int currentUserId, string role)
     {
+        if (dto.TournamentId <= 0)
+            throw new ArgumentException("Идентификатор турнира некорректен");
+
+        if (dto.TeamAId <= 0 || dto.TeamBId <= 0)
+            throw new ArgumentException("Идентификаторы команд некорректны");
+
+        if (dto.StageId <= 0)
+            throw new ArgumentException("Идентификатор стадии некорректен");
+
         var tournament = await _context.Tournaments
             .FirstOrDefaultAsync(t => t.Id == dto.TournamentId && !t.IsDeleted)
             ?? throw new KeyNotFoundException("Турнир не найден");
@@ -68,6 +77,12 @@ public class MatchService(DataBaseContext context, IBracketService _bracketServi
 
     public async Task AddResultAsync(int matchId, MatchResultCreateDto dto, int currentUserId, string role)
     {
+        if (matchId <= 0)
+            throw new ArgumentException("Идентификатор матча некорректен");
+
+        if (dto.ScoreTeamA < 0 || dto.ScoreTeamB < 0)
+            throw new ArgumentException("Очки не могут быть отрицательными");
+
         var match = await _context.Matches
             .Include(m => m.Tournament)
             .FirstOrDefaultAsync(m => m.Id == matchId)

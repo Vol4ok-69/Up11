@@ -75,6 +75,12 @@ public class UserService(DataBaseContext context) : IUserService
 
     public async Task ChangePasswordAsync(int id, ChangePasswordDto dto, int currentUserId, string role)
     {
+        if (string.IsNullOrWhiteSpace(dto.OldPassword))
+            throw new ArgumentException("Старый пароль не указан");
+
+        if (string.IsNullOrWhiteSpace(dto.NewPassword))
+            throw new ArgumentException("Новый пароль не указан");
+
         var currentLevel = RoleHierarchy.GetLevel(role);
 
         if (currentUserId != id && currentLevel < (int)RoleLevel.Administrator)
@@ -92,6 +98,9 @@ public class UserService(DataBaseContext context) : IUserService
 
     public async Task ChangeEmailAsync(int id, ChangeEmailDto dto, int currentUserId, string role)
     {
+        if (string.IsNullOrWhiteSpace(dto.NewEmail))
+            throw new ArgumentException("Email не указан");
+
         var currentLevel = RoleHierarchy.GetLevel(role);
 
         if (currentUserId != id && currentLevel < (int)RoleLevel.Administrator)

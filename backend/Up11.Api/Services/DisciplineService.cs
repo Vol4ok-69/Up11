@@ -18,6 +18,9 @@ public class DisciplineService(DataBaseContext context) : IDisciplineService
 
     public async Task CreateAsync(DisciplineCreateDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            throw new ArgumentException("Название дисциплины не указано");
+
         if (await _context.Disciplines.AnyAsync(d => d.Title == dto.Title))
             throw new ArgumentException("Дисциплина уже существует");
 
@@ -37,7 +40,12 @@ public class DisciplineService(DataBaseContext context) : IDisciplineService
             ?? throw new KeyNotFoundException("Дисциплина не найдена");
 
         if (dto.Title != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new ArgumentException("Название дисциплины не может быть пустым");
+
             discipline.Title = dto.Title;
+        }
 
         if (dto.Description != null)
             discipline.Description = dto.Description;

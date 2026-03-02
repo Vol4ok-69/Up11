@@ -36,6 +36,9 @@ public class ApplicationStatusService(DataBaseContext context)
 
     public async Task CreateAsync(ApplicationStatusCreateDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            throw new ArgumentException("Название статуса не указано");
+
         if (await _context.ApplicationStatuses.AnyAsync(s => s.Title == dto.Title))
             throw new ArgumentException("Статус уже существует");
 
@@ -53,7 +56,12 @@ public class ApplicationStatusService(DataBaseContext context)
             ?? throw new KeyNotFoundException("Статус заявки не найден");
 
         if (dto.Title != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new ArgumentException("Название статуса не может быть пустым");
+
             status.Title = dto.Title;
+        }
 
         await _context.SaveChangesAsync();
     }

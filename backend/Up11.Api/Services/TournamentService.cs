@@ -52,6 +52,9 @@ public class TournamentService(DataBaseContext context) : ITournamentService
 
     public async Task CreateAsync(TournamentCreateDto dto, int currentUserId)
     {
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            throw new ArgumentException("Название турнира не указано");
+
         var tournament = new Tournament
         {
             Title = dto.Title,
@@ -78,7 +81,12 @@ public class TournamentService(DataBaseContext context) : ITournamentService
             throw new UnauthorizedAccessException("Недостаточно прав");
 
         if (dto.Title != null)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new ArgumentException("Название турнира не может быть пустым");
+
             tournament.Title = dto.Title;
+        }
 
         if (dto.StartDate.HasValue)
             tournament.StartDate = dto.StartDate.Value;
