@@ -42,7 +42,7 @@ export default function AdminPage() {
     const [activeTable, setActiveTable] = useState("Users")
 
     return (
-        <div className="min-h-screen p-6 bg-gradient-to-br
+        <div className="min-h-screen p-6 bg-linear-to-br
             from-slate-100 via-white to-slate-200
             dark:from-slate-950 dark:via-slate-900 dark:to-black">
 

@@ -91,14 +91,14 @@ export default function AuthPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden
-      bg-gradient-to-br from-slate-100 via-white to-slate-200
+      bg-linear-to-br from-slate-100 via-white to-slate-200
     dark:from-slate-950 dark:via-slate-900 dark:to-black">
 
-      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] 
+      <div className="absolute -top-40 -left-40 w-125 h-125 
      bg-purple-400/20 dark:bg-purple-600/20 
        blur-[120px] rounded-full" />
 
-      <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] 
+      <div className="absolute -bottom-40 -right-40 w-125 h-125 
       bg-cyan-400/20 dark:bg-cyan-600/20 
         blur-[120px] rounded-full" />
 
@@ -114,7 +114,7 @@ export default function AuthPage() {
         <CardContent className="p-10">
 
           <h1 className="text-3xl font-bold text-center mb-2
-            bg-gradient-to-r from-[var(--accent-purple)] to-[var(--accent-cyan)]
+            bg-linear-to-r from-(--accent-purple) to-(--accent-cyan)
             bg-clip-text text-transparent">
             Up11 Esports
           </h1>
@@ -167,7 +167,7 @@ export default function AuthPage() {
                   name="login"
                   placeholder="Логин"
                   className="bg-white/80 dark:bg-slate-800/80 
-                         focus-visible:ring-[var(--accent-purple)]
+                         focus-visible:ring-(--accent-purple)
                          rounded-lg"
                 />
 
@@ -176,7 +176,7 @@ export default function AuthPage() {
                   type="password"
                   placeholder="Пароль"
                   className="bg-white/80 dark:bg-slate-800/80 
-                         focus-visible:ring-[var(--accent-purple)]
+                         focus-visible:ring-(--accent-purple)
                          rounded-lg"
                 />
 
@@ -184,9 +184,9 @@ export default function AuthPage() {
                   type="submit"
                   disabled={loading}
                   className="w-full rounded-lg
-                    bg-gradient-to-r 
-                    from-[var(--accent-purple)] 
-                    to-[var(--accent-cyan)]
+                    bg-linear-to-r 
+                    from-(--accent-purple) 
+                    to-(--accent-cyan)
                     hover:opacity-90
                     hover:shadow-[0_0_25px_rgba(218,112,214,0.4)]
                     transition-all duration-300
@@ -216,9 +216,9 @@ export default function AuthPage() {
                   type="submit"
                   disabled={loading}
                   className="w-full rounded-lg
-                    bg-gradient-to-r 
-                    from-[var(--accent-purple)] 
-                    to-[var(--accent-cyan)]
+                    bg-linear-to-r 
+                    from-(--accent-purple) 
+                    to-(--accent-cyan)
                     hover:opacity-90
                     hover:shadow-[0_0_25px_rgba(218,112,214,0.4)]
                     transition-all duration-300
