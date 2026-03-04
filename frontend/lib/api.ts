@@ -5,45 +5,67 @@ export async function apiRequest<T>(
     options: RequestInit = {}
 ): Promise<T> {
 
-    const token =
-        typeof window !== "undefined"
-            ? localStorage.getItem("token")
-            : null
-
-    const res = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` }),
-            ...(options.headers || {}),
-        },
+    console.log(`[API Request] ${options.method || "GET"} ${endpoint}`, {
+        body: options.body,
     })
 
-    if (res.status === 401) {
-        localStorage.removeItem("token")
-        window.location.href = "/auth"
-        throw new Error("Unauthorized")
-    }
+    try {
+        const token =
+            typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : null
 
-    if (!res.ok) {
-        const text = await res.text()
+        const res = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers: {
+                ...(options.body && !(options.body instanceof FormData)
+                    ? { "Content-Type": "application/json" }
+                    : {}),
+                ...(token && { Authorization: `Bearer ${token}` }),
+                ...(options.headers || {}),
+            },
+        })
 
-        try {
-            const errorJson = JSON.parse(text)
-            throw new Error(errorJson.error || errorJson.message || text || `Error ${res.status}`)
-        } catch (e) {
-            if (e instanceof Error && e.message !== text) {
-                throw e
-            }
-            throw new Error(text || `Error ${res.status}`)
+        const rawText = await res.text()
+
+        if (res.status === 401) {
+            console.error(`[API Error] 401 Unauthorized on ${endpoint}`)
+            localStorage.removeItem("token")
+            window.location.href = "/auth"
+            throw new Error("Unauthorized")
         }
+
+        if (!res.ok) {
+            console.error(`[API Error] ${res.status} on ${endpoint}:`, rawText)
+
+            try {
+                const errorJson = JSON.parse(rawText)
+                throw new Error(
+                    errorJson.error ||
+                    errorJson.message ||
+                    rawText ||
+                    `Error ${res.status}`
+                )
+            } catch {
+                throw new Error(rawText || `Error ${res.status}`)
+            }
+        }
+
+        if (res.status === 204 || !rawText) {
+            console.log(`[API Response] No Content on ${endpoint}`)
+            return null as T
+        }
+
+        const data = JSON.parse(rawText)
+        console.log(`[API Response] Success on ${endpoint}`, data)
+
+        return data as T
+
+    } catch (error) {
+        console.error(
+            `[API Exception] on ${options.method || "GET"} ${endpoint}:`,
+            error
+        )
+        throw error
     }
-
-    if (res.status === 204) return null as T
-
-    const text = await res.text()
-
-    if (!text) return null as T
-
-    return JSON.parse(text)
 }

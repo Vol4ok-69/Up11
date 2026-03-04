@@ -39,7 +39,7 @@ export default function AdminPage() {
         "TournamentBrackets",
     ]
 
-    const [activeTable, setActiveTable] = useState("Users")
+    const [activeTable, setActiveTable] = useState("Roles")
 
     return (
         <div className="min-h-screen p-6 bg-linear-to-br
