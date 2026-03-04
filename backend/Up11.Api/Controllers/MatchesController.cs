@@ -55,4 +55,15 @@ public class MatchesController(IMatchService service) : ControllerBase
         await _service.AddResultAsync(id, dto, userId, role);
         return StatusCode(201);
     }
+
+    [Authorize]
+    [HttpGet("{id}/result")]
+    #region Swagger
+    [ProducesResponseType(typeof(MatchResultReadDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult<MatchResultReadDto>> GetResult(int id)
+    {
+        return Ok(await _service.GetResultAsync(id));
+    }
 }

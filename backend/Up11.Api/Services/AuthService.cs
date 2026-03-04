@@ -30,9 +30,9 @@ public class AuthService(DataBaseContext context, IJwtTokenService jwtService) :
         if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
             throw new ArgumentException("Email уже существует");
 
-        var guestRole = await _context.Roles
-            .FirstOrDefaultAsync(r => r.Title == "Гость")
-            ?? throw new KeyNotFoundException("Роль 'Гость' не найдена");
+        var role = await _context.Roles
+            .FirstOrDefaultAsync(r => r.Id == dto.RoleId)
+            ?? throw new ArgumentException("Роль не найдена");
 
         var user = new User
         {
@@ -40,7 +40,7 @@ public class AuthService(DataBaseContext context, IJwtTokenService jwtService) :
             Email = dto.Email,
             PasswordHash = PasswordHelper.Hash(dto.Password),
             Nickname = dto.Nickname,
-            RoleId = guestRole.Id,
+            RoleId = role.Id,
             IsBlocked = false
         };
 

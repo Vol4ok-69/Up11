@@ -1,14 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using Up11.Api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Up11.Api.Interfaces;
-using Up11.Api.Services;
-using Up11.Api.Middlewares;
-using Up11.Api.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
+using Up11.Api.Helpers;
+using Up11.Api.Interfaces;
+using Up11.Api.Middlewares;
+using Up11.Api.Models;
+using Up11.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +62,8 @@ builder.Services.AddScoped<ITournamentSystemService, TournamentSystemService>();
 builder.Services.AddScoped<IMatchStageService, MatchStageService>();
 builder.Services.AddScoped<IApplicationStatusService, ApplicationStatusService>();
 builder.Services.AddScoped<ITournamentBracketTypeService, TournamentBracketTypeService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ITournamentApplicationService, TournamentApplicationService>();
 
 builder.Services.AddControllers();
 

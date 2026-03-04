@@ -100,4 +100,62 @@ public class TeamMemberService(DataBaseContext context) : ITeamMemberService
         _context.TeamMembers.Remove(member);
         await _context.SaveChangesAsync();
     }
+
+    public async Task AddMemberAsAdminAsync(
+    AdminTeamMemberCreateDto dto,
+    string role)
+    {
+        var roleLevel = RoleHierarchy.GetLevel(role);
+
+        if (roleLevel < (int)RoleLevel.Organizer)
+            throw new UnauthorizedAccessException("Недостаточно прав");
+
+        var team = await _context.Teams
+            .Include(t => t.TournamentParticipants)
+            .FirstOrDefaultAsync(t => t.Id == dto.TeamId)
+            ?? throw new KeyNotFoundException("Команда не найдена");
+
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == dto.UserId)
+            ?? throw new KeyNotFoundException("Пользователь не найден");
+
+        if (await _context.TeamMembers
+            .AnyAsync(tm => tm.TeamId == dto.TeamId && tm.UserId == dto.UserId))
+            throw new ArgumentException("Пользователь уже в команде");
+
+        var userTeams = await _context.TeamMembers
+            .Where(tm => tm.UserId == dto.UserId)
+            .Select(tm => tm.TeamId)
+            .ToListAsync();
+
+        if (userTeams.Any())
+        {
+            var newTeamTournaments = await _context.TournamentParticipants
+                .Where(tp => tp.TeamId == dto.TeamId)
+                .Select(tp => tp.TournamentId)
+                .ToListAsync();
+
+            var existingTournaments = await _context.TournamentParticipants
+                .Where(tp => userTeams.Contains(tp.TeamId))
+                .Select(tp => tp.TournamentId)
+                .ToListAsync();
+
+            var hasConflict = newTeamTournaments
+                .Intersect(existingTournaments)
+                .Any();
+
+            if (hasConflict)
+                throw new ArgumentException("Нельзя участвовать в двух командах одного турнира");
+        }
+
+        var member = new TeamMember
+        {
+            TeamId = dto.TeamId,
+            UserId = dto.UserId,
+            JoinedAt = DateOnly.FromDateTime(DateTime.UtcNow)
+        };
+
+        _context.TeamMembers.Add(member);
+        await _context.SaveChangesAsync();
+    }
 }

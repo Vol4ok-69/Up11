@@ -6,4 +6,5 @@ public class RegisterDto
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
     public string? Nickname { get; set; }
+    public int RoleId { get; set; } = 4;
 }

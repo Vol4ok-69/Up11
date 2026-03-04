@@ -118,4 +118,27 @@ public class MatchService(DataBaseContext context, IBracketService _bracketServi
         await _context.SaveChangesAsync();
         await _bracketService.AdvanceWinnerAsync(matchId);
     }
+    public async Task<MatchResultReadDto> GetResultAsync(int matchId)
+    {
+        var result = await _context.MatchResults
+            .Include(r => r.Match)
+                .ThenInclude(m => m.TeamA)
+            .Include(r => r.Match)
+                .ThenInclude(m => m.TeamB)
+            .Include(r => r.WinnerTeam)
+            .FirstOrDefaultAsync(r => r.MatchId == matchId)
+            ?? throw new KeyNotFoundException("Результат не найден");
+
+        return new MatchResultReadDto
+        {
+            Id = result.Id,
+            Match = $"{result.Match.TeamA.Title} vs {result.Match.TeamB.Title}",
+            ScoreTeamA = result.ScoreTeamA,
+            ScoreTeamB = result.ScoreTeamB,
+            WinnerTeam = result.WinnerTeam != null
+                ? result.WinnerTeam.Title
+                : null,
+            ResultedAt = result.Match.MatchDate
+        };
+    }
 }

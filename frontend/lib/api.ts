@@ -1,50 +1,49 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+const API_URL = process.env.NEXT_PUBLIC_API_URL!
 
-export async function apiRequest(
+export async function apiRequest<T>(
     endpoint: string,
-    method: string,
-    body?: any
-) {
+    options: RequestInit = {}
+): Promise<T> {
+
     const token =
         typeof window !== "undefined"
             ? localStorage.getItem("token")
             : null
 
     const res = await fetch(`${API_URL}${endpoint}`, {
-        method,
+        ...options,
         headers: {
             "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` }),
+            ...(options.headers || {}),
         },
-        body: body ? JSON.stringify(body) : undefined,
     })
 
+    if (res.status === 401) {
+        localStorage.removeItem("token")
+        window.location.href = "/auth"
+        throw new Error("Unauthorized")
+    }
+
     if (!res.ok) {
-        let message = `Request failed with status ${res.status}`
+        const text = await res.text()
 
         try {
-            const errorJson = await res.json()
-            message =
-                errorJson.error ||
-                errorJson.message ||
-                JSON.stringify(errorJson)
-        } catch {
-            const text = await res.text()
-            message = text || message
+            const errorJson = JSON.parse(text)
+            throw new Error(errorJson.error || errorJson.message || text || `Error ${res.status}`)
+        } catch (e) {
+            if (e instanceof Error && e.message !== text) {
+                throw e
+            }
+            throw new Error(text || `Error ${res.status}`)
         }
-
-        throw new Error(message)
     }
+
+    if (res.status === 204) return null as T
 
     const text = await res.text()
 
-    if (!text) {
-        return null
-    }
+    if (!text) return null as T
 
-    try {
-        return JSON.parse(text)
-    } catch {
-        return text
-    }
+    return JSON.parse(text)
 }

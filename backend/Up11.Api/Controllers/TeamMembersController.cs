@@ -54,4 +54,21 @@ public class TeamMembersController(ITeamMemberService service) : ControllerBase
         await _service.RemoveAsync(id, userId, role);
         return NoContent();
     }
+
+    [Authorize(Policy = "OrganizerOrHigher")]
+    [HttpPost("admin/add")]
+    #region Swagger
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    #endregion
+    public async Task<ActionResult> AddMemberAsAdmin(AdminTeamMemberCreateDto dto)
+    {
+        var role = User.FindFirst(ClaimTypes.Role)!.Value;
+
+        await _service.AddMemberAsAdminAsync(dto, role);
+
+        return StatusCode(201);
+    }
 }

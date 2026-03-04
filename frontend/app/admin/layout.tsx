@@ -1,0 +1,38 @@
+"use client"
+
+import { useAuth } from "@/lib/context/AuthContext"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
+
+export default function AdminLayout({
+    children,
+}: {
+    children: React.ReactNode
+}) {
+    const { user, loading } = useAuth()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (loading) return
+
+        if (!user) {
+            router.replace("/auth")
+        } else if (user.role !== "Администратор") {
+            router.replace("/")
+        }
+    }, [user, loading, router])
+
+    if (loading) {
+        return null
+    }
+
+    if (!user || user.role !== "Администратор") {
+        return null
+    }
+
+    return (
+        <div className="w-full overflow-x-hidden">
+            {children}
+        </div>
+    )
+}
