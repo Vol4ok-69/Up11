@@ -94,7 +94,6 @@ export default function TournamentApplicationsTab() {
     return (
         <div className="space-y-6">
 
-            {/* CREATE */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Создать заявку</h3>
 
@@ -138,7 +137,6 @@ export default function TournamentApplicationsTab() {
                 </div>
             </div>
 
-            {/* LIST TABLE */}
             <div className="overflow-x-auto">
                 <table className="min-w-full table-fixed text-sm">
                     <thead className="bg-slate-200 dark:bg-slate-800">

@@ -27,7 +27,6 @@ export const ApplicationStatusHistoryService = {
                     )
                     allHistory.push(...history)
                 } catch (e) {
-                    // Если ошибка, пропускаем
                 }
             }
             

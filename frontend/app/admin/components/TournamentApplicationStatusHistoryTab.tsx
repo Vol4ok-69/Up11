@@ -40,7 +40,7 @@ export default function TournamentApplicationStatusHistoryTab() {
     }
 
     const enrichedHistory = history.map((h, idx) => {
-        const app = allApplications[idx] // История загружается по порядку заявок
+        const app = allApplications[idx]
         return {
             ...h,
             tournament: app?.tournament || '-',
@@ -60,7 +60,6 @@ export default function TournamentApplicationStatusHistoryTab() {
     return (
         <div className="space-y-6">
 
-            {/* FILTER */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Фильтр по заявке</h3>
 
@@ -78,7 +77,6 @@ export default function TournamentApplicationStatusHistoryTab() {
                 </select>
             </div>
 
-            {/* HISTORY TABLE */}
             <div className="overflow-x-auto">
                 <table className="min-w-full table-fixed text-sm">
                     <thead className="bg-slate-200 dark:bg-slate-800">

@@ -42,7 +42,6 @@ export default function MatchResultsTab() {
                 TeamsService.getAll(),
                 MatchResultsService.getAll()
             ])
-            // Дедупликация матчей
             const uniqueMatches = matchesData.filter((m, idx, arr) => 
                 arr.findIndex(x => x.id === m.id) === idx
             )
@@ -88,7 +87,7 @@ export default function MatchResultsTab() {
                 scoreTeamB: result.scoreTeamB
             })
             alert("Результат сохранен")
-            setSelectedMatchId(0)ы
+            setSelectedMatchId(0)
             setSelectedMatch(null)
             setResult({ winnerId: 0, scoreTeamA: 0, scoreTeamB: 0 })
             await loadAll()
@@ -105,7 +104,6 @@ export default function MatchResultsTab() {
     return (
         <div className="space-y-6">
 
-            {/* SUBMIT RESULT */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Внести результат матча</h3>
 
@@ -206,7 +204,6 @@ export default function MatchResultsTab() {
                 </div>
             </div>
 
-            {/* INFO */}
             <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950 border-2 border-blue-200 dark:border-blue-800">
                 <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">ℹ️ Информация</h3>
                 <p className="text-sm text-blue-800 dark:text-blue-200">
@@ -215,7 +212,6 @@ export default function MatchResultsTab() {
                 </p>
             </div>
 
-            {/* RESULTS TABLE */}
             <div className="overflow-x-auto">
                 <table className="min-w-full table-fixed text-sm">
                     <thead className="bg-slate-200 dark:bg-slate-800">

@@ -31,7 +31,6 @@ export const TournamentApplicationsService = {
                     )
                     allApplications.push(...apps)
                 } catch (e) {
-                    // Если ошибка при получении приложений для конкретного турнира, пропускаем
                 }
             }
 

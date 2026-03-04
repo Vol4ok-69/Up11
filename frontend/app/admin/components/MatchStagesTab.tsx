@@ -64,7 +64,6 @@ export default function MatchStagesTab() {
     return (
         <div className="space-y-6">
 
-            {/* CREATE */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Создать этап матча</h3>
                 <div className="flex gap-2">
@@ -83,7 +82,6 @@ export default function MatchStagesTab() {
                 </div>
             </div>
 
-            {/* LIST */}
             {stages.map((stage) => (
                 <div
                     key={stage.id}

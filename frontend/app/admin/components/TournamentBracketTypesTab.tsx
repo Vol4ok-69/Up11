@@ -64,9 +64,8 @@ export default function TournamentBracketTypesTab() {
     return (
         <div className="space-y-6">
 
-            {/* CREATE */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
-                <h3 className="font-semibold">Создать тип скобки турнира</h3>
+                <h3 className="font-semibold">Создать тип сетки турнира</h3>
                 <div className="flex gap-2">
                     <input
                         value={newTitle}
@@ -83,7 +82,6 @@ export default function TournamentBracketTypesTab() {
                 </div>
             </div>
 
-            {/* LIST */}
             {types.map((type) => (
                 <div
                     key={type.id}

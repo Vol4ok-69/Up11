@@ -69,7 +69,6 @@ export default function UsersTab() {
     return (
         <div className="space-y-8">
 
-            {/* CREATE USER */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Создать пользователя</h3>
 
@@ -141,7 +140,7 @@ export default function UsersTab() {
                     {message}
                 </div>
             )}
-            {/* USERS TABLE */}
+
             <div className="overflow-x-auto">
                 <table className="min-w-full table-fixed text-sm">
 

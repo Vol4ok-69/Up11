@@ -132,7 +132,6 @@ export default function TournamentsTab() {
     return (
         <div className="space-y-6">
 
-            {/* CREATE */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Создать турнир</h3>
 
@@ -256,7 +255,6 @@ export default function TournamentsTab() {
                 </div>
             </div>
 
-            {/* EDIT */}
             {editingId !== null && (
                 <div className="p-4 rounded-xl bg-amber-100 dark:bg-amber-900 space-y-3 border-2 border-amber-400">
                     <h3 className="font-semibold">Редактировать турнир (ID: {editingId})</h3>

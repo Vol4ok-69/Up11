@@ -94,7 +94,6 @@ export default function AuthPage() {
       bg-gradient-to-br from-slate-100 via-white to-slate-200
     dark:from-slate-950 dark:via-slate-900 dark:to-black">
 
-      {/* Фоновое неоновое пятно */}
       <div className="absolute -top-40 -left-40 w-[500px] h-[500px] 
      bg-purple-400/20 dark:bg-purple-600/20 
        blur-[120px] rounded-full" />
@@ -161,7 +160,6 @@ export default function AuthPage() {
 
             </TabsList>
 
-            {/* LOGIN */}
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
 
@@ -199,7 +197,6 @@ export default function AuthPage() {
               </form>
             </TabsContent>
 
-            {/* REGISTER */}
             <TabsContent value="register">
               <form onSubmit={handleRegister} className="space-y-4">
 

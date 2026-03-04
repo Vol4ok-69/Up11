@@ -70,7 +70,6 @@ export default function TeamMembersTab() {
             return
         }
 
-        // Проверка: пользователь уже в команде?
         const userInTeam = members.some(m =>
             users.find(u => u.id === userId && (u.nickname === m.user || u.login === m.user))
         )
@@ -117,7 +116,6 @@ export default function TeamMembersTab() {
     return (
         <div className="space-y-6">
 
-            {/* SELECT TEAM */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Выберите команду</h3>
 
@@ -135,7 +133,6 @@ export default function TeamMembersTab() {
                 </select>
             </div>
 
-            {/* ADD MEMBER */}
             {selectedTeamId > 0 && (
                 <div className="p-4 rounded-xl bg-blue-100 dark:bg-blue-900 space-y-3">
                     <h3 className="font-semibold">Добавить игрока в команду</h3>
@@ -173,7 +170,6 @@ export default function TeamMembersTab() {
                 </div>
             )}
 
-            {/* LIST TABLE */}
             {selectedTeamId > 0 && (
                 <div className="overflow-x-auto">
                     <h3 className="font-semibold mb-3">Участники команды</h3>

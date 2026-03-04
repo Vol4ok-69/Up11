@@ -88,27 +88,6 @@ export default function AdminPage() {
                 {activeTable === "MatchResults" && <MatchResultsTab />}
                 {activeTable === "TournamentBrackets" && <TournamentBracketsTab />}
                 {activeTable === "TournamentApplicationStatusHistory" && <TournamentApplicationStatusHistoryTab />}
-                {activeTable !== "Users" && activeTable !== "Roles" &&
-                    activeTable !== "Disciplines" && activeTable !== "Teams" &&
-                    activeTable !== "TeamMembers" && activeTable !== "Tournaments" &&
-                    activeTable !== "TournamentApplications" && activeTable !== "ApplicationStatuses" &&
-                    activeTable !== "TournamentStatuses" && activeTable !== "TournamentSystems" &&
-                    activeTable !== "MatchStages" && activeTable !== "TournamentBracketTypes" &&
-                    activeTable !== "TournamentParticipants" && activeTable !== "Matches" &&
-                    activeTable !== "MatchResults" && activeTable !== "TournamentBrackets" &&
-                    activeTable !== "TournamentApplicationStatusHistory" && (
-                        <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
-                            <div className="text-4xl">🛠</div>
-                            <h3 className="text-lg font-semibold">
-                                {activeTable}
-                            </h3>
-                            <p className="text-slate-500 max-w-md">
-                                CRUD для этой таблицы будет реализован позже.
-                                Структура уже готова, осталось подключить сервис.
-                            </p>
-                        </div>
-                    )}
-
             </div>
         </div>
     )

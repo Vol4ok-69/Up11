@@ -69,7 +69,6 @@ export default function DisciplinesTab() {
     return (
         <div className="space-y-6">
 
-            {/* CREATE */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Создать дисциплину</h3>
                 <div className="space-y-3">
@@ -105,7 +104,6 @@ export default function DisciplinesTab() {
                 </div>
             </div>
 
-            {/* LIST */}
             {disciplines.map((discipline) => (
                 <div
                     key={discipline.id}

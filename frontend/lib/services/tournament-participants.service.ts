@@ -21,12 +21,10 @@ export const TournamentParticipantsService = {
     
     getAll: async (): Promise<TournamentParticipantReadDto[]> => {
         try {
-            // Получаем список всех турниров
             const { TournamentsService } = await import("./tournaments.service")
             const tournaments = await TournamentsService.getAll()
             const allParticipants: TournamentParticipantReadDto[] = []
             
-            // Для каждого турнира получаем участников
             for (const tournament of tournaments) {
                 try {
                     const participants = await apiRequest<TournamentParticipantReadDto[]>(
@@ -34,7 +32,6 @@ export const TournamentParticipantsService = {
                     )
                     allParticipants.push(...participants)
                 } catch (e) {
-                    // Если ошибка, пропускаем
                 }
             }
             

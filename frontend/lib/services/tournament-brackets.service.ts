@@ -31,7 +31,6 @@ export const TournamentBracketsService = {
                     )
                     allBrackets.push(...brackets)
                 } catch (e) {
-                    // Если ошибка, пропускаем
                 }
             }
             

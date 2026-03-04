@@ -55,7 +55,7 @@ export default function TournamentBracketsTab() {
         try {
             setGeneratingId(tournamentId)
             await TournamentBracketsService.generate(tournamentId)
-            alert("Скобка сгенерирована")
+            alert("Сетка сгенерирована")
             await loadAll()
         } catch (e: any) {
             alert(e.message)
@@ -79,9 +79,8 @@ export default function TournamentBracketsTab() {
     return (
         <div className="space-y-6">
 
-            {/* GENERATE */}
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
-                <h3 className="font-semibold">Сгенерировать скобку турнира</h3>
+                <h3 className="font-semibold">Сгенерировать сетку турнира</h3>
 
                 <div className="flex gap-2">
                     <select
@@ -107,14 +106,13 @@ export default function TournamentBracketsTab() {
                 </div>
             </div>
 
-            {/* LIST TABLE */}
             <div className="overflow-x-auto">
                 <table className="min-w-full table-fixed text-sm">
                     <thead className="bg-slate-200 dark:bg-slate-800">
                         <tr>
                             <th className="p-3 text-left w-16">ID</th>
                             <th className="p-3 text-left w-40">Турнир</th>
-                            <th className="p-3 text-left w-40">Тип скобки</th>
+                            <th className="p-3 text-left w-40">Тип сетки</th>
                             <th className="p-3 text-left w-32">Действия</th>
                         </tr>
                     </thead>
