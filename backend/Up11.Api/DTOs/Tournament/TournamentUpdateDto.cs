@@ -8,4 +8,5 @@ public class TournamentUpdateDto
     public decimal? PrizePool { get; set; }
     public int? MinTeamSize { get; set; }
     public int? StatusId { get; set; }
+    public int SystemId { get; set; } = 1;
 }

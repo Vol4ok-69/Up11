@@ -104,7 +104,7 @@ public class BracketService(DataBaseContext context) : IBracketService
                 TournamentId = tournamentId,
                 TeamAId = teams[i * 2],
                 TeamBId = teams[i * 2 + 1],
-                MatchDate = DateTime.UtcNow.AddDays(1),
+                MatchDate = DateTime.Now.AddDays(1),
                 StageId = firstRound[i].StageId,
                 IsFinished = false
             };
@@ -151,7 +151,7 @@ public class BracketService(DataBaseContext context) : IBracketService
                 TournamentId = tournamentId,
                 TeamAId = shuffled[i * 2],
                 TeamBId = shuffled[i * 2 + 1],
-                MatchDate = DateTime.UtcNow.AddDays(1),
+                MatchDate = DateTime.Now.AddDays(1),
                 StageId = upperRound1[i].StageId
             };
 
@@ -197,7 +197,7 @@ public class BracketService(DataBaseContext context) : IBracketService
                 TeamAId = shuffled[i],
                 TeamBId = shuffled[i + 1],
                 StageId = await GetStage("Групповой этап"),
-                MatchDate = DateTime.UtcNow.AddDays(1),
+                MatchDate = DateTime.Now.AddDays(1),
                 IsFinished = false
             });
         }
@@ -268,7 +268,7 @@ public class BracketService(DataBaseContext context) : IBracketService
                 TeamAId = ordered[i],
                 TeamBId = ordered[i + 1],
                 StageId = await GetStage("Групповой этап"),
-                MatchDate = DateTime.UtcNow.AddDays(1),
+                MatchDate = DateTime.Now.AddDays(1),
                 IsFinished = false
             });
         }
@@ -287,26 +287,40 @@ public class BracketService(DataBaseContext context) : IBracketService
             .Include(b => b.Match)
                 .ThenInclude(m => m.Stage)
             .Include(b => b.BracketType)
+            .Select(b => new TournamentBracketReadDto
+            {
+                Id = b.Id,
+                TournamentId = b.TournamentId,
+                StageId = b.StageId,
+                Position = b.Position,
+                MatchId = b.MatchId,
+                ParentBracketId = b.ParentBracketId,
+                SlotInParent = b.SlotInParent,
+                BracketType = b.BracketType.Title
+            })
             .ToListAsync();
-
-        var lookup = brackets.ToDictionary(b => b.Id);
 
         var roots = brackets
             .Where(b => b.ParentBracketId == null)
             .ToList();
 
-        return [.. roots.Select(r => BuildNode(r, brackets))];
+        return roots
+            .Select(r => BuildNode(r, brackets))
+            .ToList();
     }
-    private static BracketNodeDto BuildNode(TournamentBracket bracket, List<TournamentBracket> all)
+
+    private static BracketNodeDto BuildNode(
+        TournamentBracketReadDto bracket,
+        List<TournamentBracketReadDto> all)
     {
         var node = new BracketNodeDto
         {
             Id = bracket.Id,
-            Stage = bracket.Match?.Stage?.Title ?? "Не назначен",
-            BracketType = bracket.BracketType.Title,
-            TeamA = bracket.Match?.TeamA?.Title,
-            TeamB = bracket.Match?.TeamB?.Title,
-            IsFinished = bracket.Match?.IsFinished ?? false
+            Stage = bracket.StageId.ToString(),
+            BracketType = bracket.BracketType,
+            TeamA = null,
+            TeamB = null,
+            IsFinished = false
         };
 
         var children = all
@@ -378,7 +392,7 @@ public class BracketService(DataBaseContext context) : IBracketService
         {
             TournamentId = tournamentId,
             StageId = await GetStage(stage),
-            MatchDate = DateTime.UtcNow.AddDays(1),
+            MatchDate = DateTime.Now.AddDays(1),
             IsFinished = false
         };
 
@@ -434,5 +448,28 @@ public class BracketService(DataBaseContext context) : IBracketService
         }
 
         return await GetStage("Групповой этап");
+    }
+    public async Task<List<TournamentBracketReadDto>> GetByTournamentAsync(int tournamentId)
+    {
+        if (tournamentId <= 0)
+            throw new ArgumentException("Идентификатор турнира некорректен");
+
+        return await _context.TournamentBrackets
+            .Where(b => b.TournamentId == tournamentId)
+            .Include(b => b.BracketType)
+            .Select(b => new TournamentBracketReadDto
+            {
+                Id = b.Id,
+                TournamentId = b.TournamentId,
+                StageId = b.StageId,
+                Position = b.Position,
+                MatchId = b.MatchId,
+                ParentBracketId = b.ParentBracketId,
+                SlotInParent = b.SlotInParent,
+                BracketType = b.BracketType.Title
+            })
+            .OrderBy(b => b.StageId)
+            .ThenBy(b => b.Position)
+            .ToListAsync();
     }
 }

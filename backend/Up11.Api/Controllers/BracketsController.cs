@@ -29,8 +29,22 @@ public class BracketsController(IBracketService service) : ControllerBase
         await _service.GenerateAsync(tournamentId, userId, role);
         return Ok();
     }
+
     [Authorize]
     [HttpGet("{tournamentId}")]
+    #region Swagger
+    [ProducesResponseType(typeof(IEnumerable<TournamentBracketReadDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    #endregion
+    public async Task<ActionResult<IEnumerable<TournamentBracketReadDto>>> GetAll(int tournamentId)
+    {
+        var tournaments = await _service.GetByTournamentAsync(tournamentId);
+        return Ok(tournaments);
+    }
+
+    [Authorize]
+    [HttpGet("{tournamentId}/tree")]
     #region Swagger
     [ProducesResponseType(typeof(List<BracketNodeDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

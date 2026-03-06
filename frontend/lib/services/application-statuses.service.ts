@@ -2,15 +2,15 @@ import { createCrudService } from "./crud.factory"
 
 export interface ApplicationStatusReadDto {
     id: number
-    title: string | null
+    title: string
 }
 
 export interface ApplicationStatusCreateDto {
-    title: string | null
+    title: string
 }
 
 export interface ApplicationStatusUpdateDto {
-    title: string | null
+    title?: string
 }
 
 export const ApplicationStatusesService = createCrudService<

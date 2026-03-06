@@ -19,11 +19,13 @@ public class TournamentService(DataBaseContext context) : ITournamentService
             {
                 Id = t.Id,
                 Title = t.Title,
+                DisciplineId = t.Discipline.Id,
                 Discipline = t.Discipline.Title,
                 StartDate = t.StartDate,
                 EndDate = t.EndDate,
                 PrizePool = t.PrizePool,
                 MinTeamSize = t.MinTeamSize,
+                StatusId = t.Status.Id,
                 Status = t.Status.Title
             })
             .ToListAsync();
@@ -36,16 +38,17 @@ public class TournamentService(DataBaseContext context) : ITournamentService
             .Include(t => t.Status)
             .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted)
             ?? throw new KeyNotFoundException("Турнир не найден");
-
         return new TournamentReadDto
         {
             Id = tournament.Id,
             Title = tournament.Title,
+            DisciplineId = tournament.Discipline.Id,
             Discipline = tournament.Discipline.Title,
             StartDate = tournament.StartDate,
             EndDate = tournament.EndDate,
             PrizePool = tournament.PrizePool,
             MinTeamSize = tournament.MinTeamSize,
+            StatusId = tournament.Status.Id,
             Status = tournament.Status.Title
         };
     }
@@ -64,7 +67,8 @@ public class TournamentService(DataBaseContext context) : ITournamentService
             PrizePool = dto.PrizePool,
             MinTeamSize = dto.MinTeamSize,
             StatusId = dto.StatusId,
-            OrganizerId = currentUserId
+            OrganizerId = currentUserId,
+            SystemId = dto.SystemId
         };
 
         _context.Tournaments.Add(tournament);
@@ -103,6 +107,7 @@ public class TournamentService(DataBaseContext context) : ITournamentService
         if (dto.StatusId.HasValue)
             tournament.StatusId = dto.StatusId.Value;
 
+        tournament.SystemId = dto.SystemId;
         await _context.SaveChangesAsync();
     }
 

@@ -48,22 +48,23 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IApplicationStatusService, ApplicationStatusService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IDisciplineService, DisciplineService>();
-builder.Services.AddScoped<ITeamService, TeamService>();
-builder.Services.AddScoped<ITeamMemberService, TeamMemberService>();
-builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<IBracketService, BracketService>();
+builder.Services.AddScoped<IDisciplineService, DisciplineService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IMatchService, MatchService>();
+builder.Services.AddScoped<IMatchStageService, MatchStageService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ITeamMemberService, TeamMemberService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<ITournamentApplicationService, TournamentApplicationService>();
+builder.Services.AddScoped<ITournamentBracketTypeService, TournamentBracketTypeService>();
+builder.Services.AddScoped<ITournamentParticipantService, TournamentParticipantService>();
+builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<ITournamentStatusService, TournamentStatusService>();
 builder.Services.AddScoped<ITournamentSystemService, TournamentSystemService>();
-builder.Services.AddScoped<IMatchStageService, MatchStageService>();
-builder.Services.AddScoped<IApplicationStatusService, ApplicationStatusService>();
-builder.Services.AddScoped<ITournamentBracketTypeService, TournamentBracketTypeService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddScoped<ITournamentApplicationService, TournamentApplicationService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
 

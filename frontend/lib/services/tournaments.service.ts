@@ -2,17 +2,23 @@ import { createCrudService } from "./crud.factory"
 
 export interface TournamentReadDto {
     id: number
-    title: string | null
-    discipline: string | null
+    title: string
+
+    disciplineId: number
+    discipline: string
+
     startDate: string
     endDate: string
+
     prizePool: number
     minTeamSize: number
-    status: string | null
+
+    statusId: number
+    status: string
 }
 
 export interface TournamentCreateDto {
-    title: string | null
+    title: string
     disciplineId: number
     startDate: string
     endDate: string
@@ -22,7 +28,7 @@ export interface TournamentCreateDto {
 }
 
 export interface TournamentUpdateDto {
-    title?: string | null
+    title?: string
     startDate?: string
     endDate?: string
     prizePool?: number

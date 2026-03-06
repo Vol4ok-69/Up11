@@ -24,7 +24,6 @@ export default function TournamentParticipantsTab() {
     const [newParticipant, setNewParticipant] = useState({
         tournamentId: 0,
         teamId: 0,
-        seed: 0
     })
 
     useEffect(() => {
@@ -57,7 +56,7 @@ export default function TournamentParticipantsTab() {
 
         try {
             await TournamentParticipantsService.create(newParticipant)
-            setNewParticipant({ tournamentId: 0, teamId: 0, seed: 0 })
+            setNewParticipant({ tournamentId: 0, teamId: 0})
             await loadAll()
         } catch (e: any) {
             alert(e.message)
@@ -82,7 +81,7 @@ export default function TournamentParticipantsTab() {
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 space-y-3">
                 <h3 className="font-semibold">Добавить участника турнира</h3>
 
-                <div className="grid md:grid-cols-4 gap-3">
+                <div className="grid md:grid-cols-3 gap-3">
                     <div>
                         <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
                             Турнир
@@ -123,21 +122,6 @@ export default function TournamentParticipantsTab() {
                         </select>
                     </div>
 
-                    <div>
-                        <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-                            Посев (опционально)
-                        </label>
-                        <input
-                            type="number"
-                            placeholder="0"
-                            value={newParticipant.seed}
-                            onChange={(e) =>
-                                setNewParticipant({ ...newParticipant, seed: Number(e.target.value) })
-                            }
-                            className="w-full px-3 py-2 border rounded-lg bg-white dark:bg-slate-900"
-                        />
-                    </div>
-
                     <div className="flex items-end">
                         <button
                             onClick={handleCreate}
@@ -156,7 +140,6 @@ export default function TournamentParticipantsTab() {
                             <th className="p-3 text-left w-16">ID</th>
                             <th className="p-3 text-left w-32">Турнир</th>
                             <th className="p-3 text-left w-32">Команда</th>
-                            <th className="p-3 text-left w-20">Посев</th>
                             <th className="p-3 text-left w-20">Действия</th>
                         </tr>
                     </thead>
@@ -166,7 +149,6 @@ export default function TournamentParticipantsTab() {
                                 <td className="p-3">{p.id}</td>
                                 <td className="p-3">{p.tournament}</td>
                                 <td className="p-3">{p.team}</td>
-                                <td className="p-3">{p.seed || "-"}</td>
                                 <td className="p-3">
                                     <button
                                         onClick={() => handleDelete(p.id)}

@@ -61,6 +61,7 @@ export default function AdminPage() {
                         shadow-sm focus:outline-none focus:ring-2
                         focus:ring-purple-500 transition"
                 >
+                    console.log("Таблица изменена на:", e.target.value);
                     {tables.map((t) => (
                         <option key={t} value={t}>
                             {t}

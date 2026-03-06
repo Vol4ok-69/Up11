@@ -4,17 +4,11 @@ export interface TournamentParticipantReadDto {
     id: number
     tournament: string | null
     team: string | null
-    seed: number | null
 }
 
 export interface TournamentParticipantCreateDto {
     tournamentId: number
     teamId: number
-    seed?: number
-}
-
-export interface TournamentParticipantUpdateDto {
-    seed?: number
 }
 
 export const TournamentParticipantsService = {
@@ -47,12 +41,6 @@ export const TournamentParticipantsService = {
     create: (data: TournamentParticipantCreateDto) =>
         apiRequest<TournamentParticipantReadDto>("/api/TournamentParticipants", {
             method: "POST",
-            body: JSON.stringify(data),
-        }),
-
-    update: (id: number, data: TournamentParticipantUpdateDto) =>
-        apiRequest<void>(`/api/TournamentParticipants/${id}`, {
-            method: "PUT",
             body: JSON.stringify(data),
         }),
 

@@ -5,19 +5,16 @@ import {
     TournamentBracketsService,
     TournamentBracketReadDto
 } from "@/lib/services/tournament-brackets.service"
+
 import {
     TournamentsService,
     TournamentReadDto
 } from "@/lib/services/tournaments.service"
-import {
-    TournamentBracketTypesService,
-    TournamentBracketTypeReadDto
-} from "@/lib/services/tournament-bracket-types.service"
 
 export default function TournamentBracketsTab() {
+
     const [brackets, setBrackets] = useState<TournamentBracketReadDto[]>([])
     const [tournaments, setTournaments] = useState<TournamentReadDto[]>([])
-    const [bracketTypes, setBracketTypes] = useState<TournamentBracketTypeReadDto[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
@@ -25,20 +22,13 @@ export default function TournamentBracketsTab() {
     const [generatingId, setGeneratingId] = useState<number | null>(null)
 
     useEffect(() => {
-        loadAll()
+        loadTournaments()
     }, [])
 
-    async function loadAll() {
+    async function loadTournaments() {
         try {
-            setError(null)
-            const [bracketsData, tournamentsData, bracketTypesData] = await Promise.all([
-                TournamentBracketsService.getAll(),
-                TournamentsService.getAll(),
-                TournamentBracketTypesService.getAll()
-            ])
-            setBrackets(bracketsData)
+            const tournamentsData = await TournamentsService.getAll()
             setTournaments(tournamentsData)
-            setBracketTypes(bracketTypesData)
         } catch (e: any) {
             setError(e.message)
         } finally {
@@ -46,7 +36,17 @@ export default function TournamentBracketsTab() {
         }
     }
 
+    async function loadBrackets(tournamentId: number) {
+        try {
+            const data = await TournamentBracketsService.getByTournament(tournamentId)
+            setBrackets(data)
+        } catch (e: any) {
+            alert(e.message)
+        }
+    }
+
     async function handleGenerateBracket(tournamentId: number) {
+
         if (!tournamentId) {
             alert("Выберите турнир")
             return
@@ -54,9 +54,13 @@ export default function TournamentBracketsTab() {
 
         try {
             setGeneratingId(tournamentId)
+
             await TournamentBracketsService.generate(tournamentId)
+
+            await loadBrackets(tournamentId)
+
             alert("Сетка сгенерирована")
-            await loadAll()
+
         } catch (e: any) {
             alert(e.message)
         } finally {
@@ -64,13 +68,11 @@ export default function TournamentBracketsTab() {
         }
     }
 
-    async function handleDelete(id: number) {
-        try {
-            await TournamentBracketsService.delete(id)
-            await loadAll()
-        } catch (e: any) {
-            alert(e.message)
-        }
+    function handleTournamentChange(id: number) {
+        setSelectedTournamentId(id)
+
+        if (id !== 0)
+            loadBrackets(id)
     }
 
     if (loading) return <p>Загрузка...</p>
@@ -83,17 +85,20 @@ export default function TournamentBracketsTab() {
                 <h3 className="font-semibold">Сгенерировать сетку турнира</h3>
 
                 <div className="flex gap-2">
+
                     <select
                         value={selectedTournamentId}
-                        onChange={(e) => setSelectedTournamentId(Number(e.target.value))}
+                        onChange={(e) => handleTournamentChange(Number(e.target.value))}
                         className="flex-1 px-3 py-2 border rounded-lg bg-white dark:bg-slate-900"
                     >
                         <option value={0}>Выберите турнир</option>
+
                         {tournaments.map(t => (
                             <option key={t.id} value={t.id}>
                                 {t.title}
                             </option>
                         ))}
+
                     </select>
 
                     <button
@@ -103,37 +108,54 @@ export default function TournamentBracketsTab() {
                     >
                         {generatingId ? "Генерирую..." : "Сгенерировать"}
                     </button>
+
                 </div>
             </div>
 
             <div className="overflow-x-auto">
+
                 <table className="min-w-full table-fixed text-sm">
+
                     <thead className="bg-slate-200 dark:bg-slate-800">
                         <tr>
-                            <th className="p-3 text-left w-16">ID</th>
-                            <th className="p-3 text-left w-40">Турнир</th>
-                            <th className="p-3 text-left w-40">Тип сетки</th>
-                            <th className="p-3 text-left w-32">Действия</th>
+                            <th className="p-3 text-left">ID</th>
+                            <th className="p-3 text-left">Stage</th>
+                            <th className="p-3 text-left">Position</th>
+                            <th className="p-3 text-left">Match</th>
+                            <th className="p-3 text-left">Parent</th>
+                            <th className="p-3 text-left">Slot</th>
+                            <th className="p-3 text-left">Type</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        {brackets.map(bracket => (
-                            <tr key={bracket.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800">
-                                <td className="p-3">{bracket.id}</td>
-                                <td className="p-3">{bracket.tournament}</td>
-                                <td className="p-3">{bracket.bracketType}</td>
-                                <td className="p-3 space-x-1 flex">
-                                    <button
-                                        onClick={() => handleDelete(bracket.id)}
-                                        className="text-red-500 text-sm hover:underline"
-                                    >
-                                        Удалить
-                                    </button>
-                                </td>
+
+                        {brackets.map(b => (
+
+                            <tr key={b.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800">
+
+                                <td className="p-3">{b.id}</td>
+
+                                <td className="p-3">{b.stageId}</td>
+
+                                <td className="p-3">{b.position}</td>
+
+                                <td className="p-3">{b.matchId ?? "-"}</td>
+
+                                <td className="p-3">{b.parentBracketId ?? "-"}</td>
+
+                                <td className="p-3">{b.slotInParent ?? "-"}</td>
+
+                                <td className="p-3">{b.bracketType}</td>
+
                             </tr>
+
                         ))}
+
                     </tbody>
+
                 </table>
+
             </div>
 
         </div>

@@ -10,4 +10,5 @@ public interface IBracketService
     Task GenerateNextSwissRound(int tournamentId);
     Task<List<BracketNodeDto>> GetBracketTreeAsync(int tournamentId);
     Task<List<SwissTableDto>> GetSwissTableAsync(int tournamentId);
+    Task<List<TournamentBracketReadDto>> GetByTournamentAsync(int tournamentId);
 }
