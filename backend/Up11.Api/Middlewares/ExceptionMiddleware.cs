@@ -41,6 +41,14 @@ public class ExceptionMiddleware(RequestDelegate next,
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)status;
 
-        return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+        return context.Response.WriteAsync(
+            JsonSerializer.Serialize(
+                response,
+                new JsonSerializerOptions
+                {
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                }
+            )
+        );
     }
 }

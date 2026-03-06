@@ -9,6 +9,8 @@ using Up11.Api.Interfaces;
 using Up11.Api.Middlewares;
 using Up11.Api.Models;
 using Up11.Api.Services;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,7 +68,11 @@ builder.Services.AddScoped<ITournamentStatusService, TournamentStatusService>();
 builder.Services.AddScoped<ITournamentSystemService, TournamentSystemService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 

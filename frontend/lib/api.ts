@@ -44,6 +44,7 @@ export async function apiRequest<T>(
                     errorJson.error ||
                     errorJson.message ||
                     rawText ||
+                    decodeUnicode(rawText) ||
                     `Error ${res.status}`
                 )
             } catch {
@@ -68,4 +69,9 @@ export async function apiRequest<T>(
         )
         throw error
     }
+}
+function decodeUnicode(str: string) {
+    return str.replace(/\\u[\dA-F]{4}/gi, (match) =>
+        String.fromCharCode(parseInt(match.replace("\\u", ""), 16))
+    )
 }

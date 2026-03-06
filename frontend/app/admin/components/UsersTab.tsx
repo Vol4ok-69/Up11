@@ -6,6 +6,7 @@ import { RolesService, RoleReadDto } from "@/lib/services/roles.service"
 import { register } from "@/lib/services/auth.service"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { List } from "lucide-react"
 
 export default function UsersTab() {
     const [message, setMessage] = useState<string | null>(null)
@@ -23,15 +24,17 @@ export default function UsersTab() {
 
     async function loadAll() {
         setLoading(true)
+
         const [usersData, rolesData] = await Promise.all([
             UsersService.getAll(),
             RolesService.getAll()
         ])
-        setUsers(usersData)
+
+        setUsers(usersData.filter(u => !u.isDeleted))
         setRoles(rolesData)
+
         setLoading(false)
     }
-
     useEffect(() => {
         loadAll()
     }, [])

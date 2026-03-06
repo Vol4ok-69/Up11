@@ -6,6 +6,7 @@ export interface UserReadDto {
     login: string
     nickname?: string | null
     role: string
+    isDeleted: boolean
 }
 
 export interface UserUpdateDto {

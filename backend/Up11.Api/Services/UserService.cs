@@ -19,7 +19,8 @@ public class UserService(DataBaseContext context) : IUserService
                 Id = u.Id,
                 Login = u.Login,
                 Nickname = u.Nickname,
-                Role = u.Role.Title
+                Role = u.Role.Title,
+                IsDeleted = u.IsDeleted
             })
             .ToListAsync();
     }
@@ -34,7 +35,8 @@ public class UserService(DataBaseContext context) : IUserService
                 Id = u.Id,
                 Login = u.Login,
                 Nickname = u.Nickname,
-                Role = u.Role.Title
+                Role = u.Role.Title,
+                IsDeleted = u.IsDeleted
             })
             .FirstOrDefaultAsync()
             ?? throw new KeyNotFoundException("Пользователь не найден");

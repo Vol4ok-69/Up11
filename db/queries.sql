@@ -1,5 +1,5 @@
 --Пользователи и их роли
-SELECT u."Id", u."Login" AS "Логин", u."Nickname" AS "Игровое имя", r."Title" AS "Роль в системе"
+SELECT u."Id", u."Login" AS "Логин", u."Nickname" AS "Игровое имя", r."Title" AS "Роль в системе", u."IsDeleted" AS"Статус удаления"
 FROM "Users" u JOIN "Roles" r ON u."RoleId" = r."Id"
 ORDER BY r."Title", u."Login";
 
